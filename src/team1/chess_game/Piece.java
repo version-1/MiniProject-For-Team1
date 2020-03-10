@@ -19,11 +19,21 @@ public abstract class Piece {
 
     public abstract void move();
 
+    public boolean isValidMove(Position newPosition) {
+        if (newPosition.getRow() > 0 && newPosition.getCol() > 0 && newPosition.getRow() < 8
+                && newPosition.getCol() < 8) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Piece)) return false;
-        return this.value == ((Piece) o).value &&
-                this.isWhite == ((Piece) o).isWhite;
+        if (this == o)
+            return true;
+        if (!(o instanceof Piece))
+            return false;
+        return this.value == ((Piece) o).value && this.isWhite == ((Piece) o).isWhite;
     }
 }
