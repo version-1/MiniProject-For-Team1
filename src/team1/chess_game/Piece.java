@@ -3,6 +3,7 @@ package team1.chess_game;
 public abstract class Piece {
     private int value;
     boolean isWhite;
+    protected Position position;
 
     public Piece(int value, boolean isWhite) {
         this.isWhite = isWhite;
