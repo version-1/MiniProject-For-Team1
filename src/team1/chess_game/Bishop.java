@@ -1,4 +1,4 @@
-package lab3;
+package team1.chess_game;
 
 public class Bishop extends Piece {
 

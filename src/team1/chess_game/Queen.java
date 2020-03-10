@@ -1,4 +1,4 @@
-package lab3;
+package team1.chess_game;
 
 public class Queen extends Piece {
     private static final int VALUE = 9;

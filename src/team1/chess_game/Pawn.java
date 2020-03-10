@@ -1,4 +1,4 @@
-package lab3;
+package team1.chess_game;
 
 import java.util.Objects;
 
