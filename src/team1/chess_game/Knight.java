@@ -7,6 +7,11 @@ public class Knight extends Piece {
     }
 
     @Override
+    public String render() {
+        return isWhite ? "♘" : "♞";
+    }
+
+    @Override
     public String toString() {
         return "Knight{value=’" + getValue() + "\'" + "}";
     }

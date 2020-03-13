@@ -8,6 +8,10 @@ public class Queen extends Piece {
         super(VALUE, isWhite);
     }
 
+    @Override
+    public String render() {
+       return isWhite ? "♔" : "♚";
+    }
 
     public String toString() {
         return "Queen{value=’" + getValue() + "\'" + "}";

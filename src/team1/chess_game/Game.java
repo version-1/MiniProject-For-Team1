@@ -1,38 +1,102 @@
 package team1.chess_game;
 
-import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Game {
-    private Piece [][] board;
+    private Piece[][] board;
+    private int handCount = 0;
 
-    public Game(){
-
-        board = new Piece[8][8];
+    public Game() {
+        this.board = new Piece[8][8];
+        this.init();
     }
 
-        public void newGame(){
+    public void incrementHandCount() {
+        this.handCount++;
+    }
 
-            ArrayList<Piece> pieces = new ArrayList<>();
-            pieces.add(new Pawn(true));
-            pieces.add(new Rook(true));
-            pieces.add(new Knight(true));
-            pieces.add(new Bishop(true));
-            pieces.add(new Queen(true));
-            pieces.add(new King(true));
+    public boolean start(Scanner scan) {
+        renderBoard();
+        String ans = askUCI(scan);
 
-            pieces.add(new Pawn(false));
-            pieces.add(new Rook(false));
-            pieces.add(new Knight(false));
-            pieces.add(new Bishop(false));
-            pieces.add(new Queen(false));
-            pieces.add(new King(false));
+        // TODO:
+        // if input is help, show hekp
+        // if input is board, show board ( just call renderBoard method)
+        // if input is resign, resign and show regign message (if you return false, game will be over)
+        // if input is moves, show movable positions
+        // if input is UCI,  move piece and show board
 
-            for (Piece piece: pieces) {
-                piece.move();
+        return false;
+    }
+
+    public String askUCI(Scanner scan) {
+        printTurn();
+        System.out.println("Enter UCI (type \"help\" for help):");
+        return scan.nextLine();
+    }
+
+
+    public void renderBoard() {
+        for (int i = 0; i < this.board.length; i++) {
+            Piece[] row = this.board[i];
+            for (int j = 0; j < row.length; j++) {
+                if (row[j] == null) {
+                    System.out.print("・");
+                } else {
+                    System.out.print(" " + row[j].render());
+                }
+            }
+            System.out.println(" " + Integer.toString(8 - i));
+        }
+        renderFooter();
+    }
+
+    private void renderFooter() {
+        String[] chars = {"a", "b", "c", "d", "e", "f", "g", "h"};
+        System.out.println("");
+        for (int i = 0; i < chars.length; i++) {
+            System.out.print(" " + chars[i]);
+        }
+        System.out.println("");
+    }
+
+    private void init() {
+        for (int i = 0; i < this.board.length; i++) {
+            Piece[] row = this.board[i];
+            if (i == 0 || i == 8) {
+               boolean isWhite = i == 0;
+               for(int j = 0; j < row.length; j++) {
+                   this.board[i][j] = new Pawn(isWhite);
+               }
             }
 
+            if (i == 1 || i == 6) {
+               boolean isWhite = i == 1;
+               for(int j = 0; j < row.length; j++) {
+                   this.board[i][j] = new Pawn(isWhite);
+               }
+            }
 
-
-
+            if (i == 0 || i == 7) {
+               boolean isWhite = i == 0;
+               this.board[i][0] = new Rook(isWhite);
+               this.board[i][1] = new Knight(isWhite);
+               this.board[i][2] = new Bishop(isWhite);
+               this.board[i][3] = new King(isWhite);
+               this.board[i][4] = new Queen(isWhite);
+               this.board[i][5] = new Bishop(isWhite);
+               this.board[i][6] = new Knight(isWhite);
+               this.board[i][7] = new Rook(isWhite);
+            }
         }
+    }
+
+    private void printTurn() {
+        if (this.handCount % 2 == 0) {
+          System.out.println("White to Move");
+        } else {
+          System.out.println("White to Move");
+        }
+    }
+
 }

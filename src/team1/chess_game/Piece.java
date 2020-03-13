@@ -10,6 +10,8 @@ public abstract class Piece {
         this.value = value;
     }
 
+    public abstract String render();
+
     public int getValue() {
         return value;
     }
@@ -28,7 +30,6 @@ public abstract class Piece {
             return false;
         }
     }
-
 
     public boolean equals(Object o) {
         if (this == o)

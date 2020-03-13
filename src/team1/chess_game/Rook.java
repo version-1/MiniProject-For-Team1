@@ -6,6 +6,10 @@ public class Rook extends Piece {
         super(5, isWhite);
     }
 
+    @Override
+    public String render() {
+       return isWhite ? "♔" : "♚";
+    }
 
     public String toString() {
         return "Rook{value=’" + getValue() + "\'" + "}";
@@ -16,6 +20,7 @@ public class Rook extends Piece {
     }
 
 
+    @Override
     public boolean isValidMove(Position newPosition){
         if(newPosition.getCol() == this.position.getCol() || newPosition.getRow() == this.position.getRow()){
             return true;

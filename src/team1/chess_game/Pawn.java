@@ -12,6 +12,11 @@ public class Pawn extends Piece {
         this.newPiece = null;
     }
 
+    @Override
+    public String render() {
+       return isWhite ? "♙" : "♟";
+    }
+
     public void promote(Piece newPiece) {
         if (newPiece.equals(new King(this.isWhite))|| newPiece.equals(new Pawn(this.isWhite))) {
             System.out.println("Cannot be promoted to King or Pawn.");
