@@ -44,6 +44,24 @@ public class Pawn extends Piece {
                 Objects.equals(this.newPiece, pawn.newPiece);
     }
 
+    @Override
+    public boolean isValidMove(Position newPosition) {
+        // Don't count with opponent's figure on the newPosition or in front of a pawn
+        if (this.position.getCol() == newPosition.getCol() && (this.position.getRow() + 1) == newPosition.getRow()) {
+            return true;
+        } else if (this.position.getRow() == 2 && this.position.getCol() == newPosition.getCol() &&
+                (this.position.getRow() + 2) == newPosition.getRow()) {
+            return true;
+        } else if (this.position.getRow() == 7 && this.position.getCol() == newPosition.getCol() &&
+                (this.position.getRow() + 1) == newPosition.getRow()) {
+        // The pawn reached the end and got promoted
+            this.promote(newPiece);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public boolean isPromoted() {
         return promoted;
     }
