@@ -31,7 +31,7 @@ public class Game {
 
     public String askUCI(Scanner scan) {
         printTurn();
-        System.out.println("Enter UCI (type \"help\" for help):");
+        System.out.print("Enter UCI (type \"help\" for help): ");
         return scan.nextLine();
     }
 
@@ -63,22 +63,16 @@ public class Game {
     private void init() {
         for (int i = 0; i < this.board.length; i++) {
             Piece[] row = this.board[i];
-            if (i == 0 || i == 8) {
-               boolean isWhite = i == 0;
-               for(int j = 0; j < row.length; j++) {
-                   this.board[i][j] = new Pawn(isWhite);
-               }
-            }
 
             if (i == 1 || i == 6) {
-               boolean isWhite = i == 1;
+               boolean isWhite = i == 6;
                for(int j = 0; j < row.length; j++) {
                    this.board[i][j] = new Pawn(isWhite);
                }
             }
 
             if (i == 0 || i == 7) {
-               boolean isWhite = i == 0;
+               boolean isWhite = i == 7;
                this.board[i][0] = new Rook(isWhite);
                this.board[i][1] = new Knight(isWhite);
                this.board[i][2] = new Bishop(isWhite);

@@ -1,7 +1,5 @@
 package team1.chess_game;
 
-import java.lang.*;
-
 public class King extends Piece {
 
     public King(boolean isWhite) {
@@ -10,7 +8,7 @@ public class King extends Piece {
 
     @Override
     public String render() {
-        return isWhite ? "♕" : "♛";
+        return isWhite ?  "♕" : "♛";
     }
 
     public void move() {

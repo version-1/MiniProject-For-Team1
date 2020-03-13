@@ -8,7 +8,7 @@ public class Bishop extends Piece {
 
     @Override
     public String render() {
-       return isWhite ? "♙" : "♟";
+       return isWhite ?  "♗" : "♝";
     }
 
     @Override
