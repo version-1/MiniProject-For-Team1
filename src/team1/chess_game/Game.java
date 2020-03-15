@@ -68,8 +68,8 @@ public class Game {
 
 
 
-            } if(ans.length() == 2 && Character.isDigit(ans.charAt(0)) && Character.isDigit(ans.charAt(1))){
-                
+            } if(ans.length() == 2 && Character.isLetter(ans.charAt(0)) && Character.isDigit(ans.charAt(1))){
+
             }
 
             else{System.out.println("\nInvalid Input.");
