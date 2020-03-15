@@ -32,7 +32,8 @@ public class Game {
         // if input is UCI,  move piece and show board
 
 
-            if (Objects.equals(ans, "help") || Objects.equals(ans, "board") || Objects.equals(ans, "resign") || Objects.equals(ans, "moves")) {
+            if (Objects.equals(ans, "help") || Objects.equals(ans, "board") ||
+                    Objects.equals(ans, "resign") || Objects.equals(ans, "moves")) {
 
 
                 switch (ans) {
@@ -61,8 +62,17 @@ public class Game {
                         break;
 
                 }
-            }else {
-                System.out.println("\nInvalid Input.");
+
+            }if(ans.length() == 4 && Character.isLetter(ans.charAt(0)) && Character.isDigit(ans.charAt(1)) &&
+                    Character.isLetter(ans.charAt(2)) && Character.isDigit(ans.charAt(3))) {
+
+
+
+            } if(ans.length() == 2 && Character.isDigit(ans.charAt(0)) && Character.isDigit(ans.charAt(1))){
+                
+            }
+
+            else{System.out.println("\nInvalid Input.");
             }
 
 
