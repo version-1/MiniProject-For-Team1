@@ -6,9 +6,7 @@ public class Driver {
     public static void main(String[] args) {
         Game game = new Game();
         Scanner scan = new Scanner(System.in);
-        while(game.start(scan)) {
-            game.incrementHandCount();
-        }
+        game.start(scan);
         scan.close();
     }
 }

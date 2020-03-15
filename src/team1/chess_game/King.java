@@ -23,8 +23,8 @@ public class King extends Piece {
 
         if (Math.abs(newPosition.getCol() - this.position.getCol()) == 1
                 || Math.abs(newPosition.getRow() - this.position.getRow()) == 1
-                || Math.abs(newPosition.getCol() - this.position.getCol()) == 1
-                        && Math.abs(newPosition.getCol() - this.position.getRow()) == 1) {
+                || Math.abs(newPosition.getCol() - this.position.getCol()) == 1 &&
+                Math.abs(newPosition.getRow() - this.position.getRow()) == 1) {
             return true;
 
         } else {
