@@ -2,6 +2,10 @@ package team1.chess_game;
 
 import java.util.Scanner;
 
+import java.util.ArrayList;
+import java.util.Objects;
+
+
 public class Game {
     private Piece[][] board;
     private int handCount = 0;
@@ -15,21 +19,84 @@ public class Game {
         this.handCount++;
     }
 
-    public boolean start(Scanner scan) {
+    public void start(Scanner scan) {
         renderBoard();
-        init();
+
+        while(true) {
         String ans = askUCI(scan);
-        System.out.println(square(ans));
+        // System.out.println(square(ans));
 
         // TODO:
         // if input is help, show help
         // if input is board, show board ( just call renderBoard method)
-        // if input is resign, resign and show regign message (if you return false, game will be over)
+        // if input is resign, resign and show resign message (if you return false, game will be over)
         // if input is moves, show movable positions
         // if input is UCI,  move piece and show board
 
-        return false;
+
+            if (Objects.equals(ans, "help") || Objects.equals(ans, "board") ||
+                    Objects.equals(ans, "resign") || Objects.equals(ans, "moves") || Objects.equals(ans, "square")) {
+
+
+                switch (ans) {
+
+                    case "help":
+                        help();
+                        break;
+
+                    case "board":
+                        renderBoard();
+                        break;
+
+
+                    case "resign":
+                        if (handCount % 2 != 0) {
+                            System.out.println("Game over - White won by resignation");
+                        } else {
+                            System.out.println("Game over - Black won by resignation");
+                        }
+                        System.exit(0);
+                        break;
+
+                    case "moves":
+                        break;
+
+                    case "square":
+                        String ans1 = askUCI(scan);
+                        System.out.println(square(ans1));
+                        break;
+
+                }
+
+            }if(ans.length() == 4 && Character.isLetter(ans.charAt(0)) && Character.isDigit(ans.charAt(1)) &&
+                    Character.isLetter(ans.charAt(2)) && Character.isDigit(ans.charAt(3))) {
+
+
+
+            } if(ans.length() == 2 && Character.isLetter(ans.charAt(0)) && Character.isDigit(ans.charAt(1))){
+
+            }
+
+            else{System.out.println("\nInvalid Input.");
+            }
+
+
+        }
+
     }
+
+
+    private void help(){
+        System.out.println("+==========================================================================+\n" +
+                           "| * type 'board' to see the board again                                    |\n" +
+                           "| * type 'resign' to resign                                                |\n" +
+                           "| * type 'moves' to list all possible moves                                |\n" +
+                           "| * type a square (e.g. b1, e2) to list all possible moves for that square |\n" +
+                           "| * type UIC (e.g. bic3, e7e8q) to make a move                             |\n" +
+                           "+==========================================================================+");
+        }
+
+
 
     public String askUCI(Scanner scan) {
         printTurn();
@@ -66,26 +133,29 @@ public class Game {
         for (int i = 0; i < this.board.length; i++) {
             Piece[] row = this.board[i];
 
+
             if (i == 1 || i == 6) {
-               boolean isWhite = i == 6;
-               for(int j = 0; j < row.length; j++) {
-                   this.board[i][j] = new Pawn(isWhite);
-               }
+                boolean isWhite = i == 6;
+                for (int j = 0; j < row.length; j++) {
+                    this.board[i][j] = new Pawn(isWhite);
+                }
             }
 
+
             if (i == 0 || i == 7) {
-               boolean isWhite = i == 7;
-               this.board[i][0] = new Rook(isWhite);
-               this.board[i][1] = new Knight(isWhite);
-               this.board[i][2] = new Bishop(isWhite);
-               this.board[i][3] = new King(isWhite);
-               this.board[i][4] = new Queen(isWhite);
-               this.board[i][5] = new Bishop(isWhite);
-               this.board[i][6] = new Knight(isWhite);
-               this.board[i][7] = new Rook(isWhite);
+                boolean isWhite = i == 7;
+                this.board[i][0] = new Rook(isWhite);
+                this.board[i][1] = new Knight(isWhite);
+                this.board[i][2] = new Bishop(isWhite);
+                this.board[i][3] = new King(isWhite);
+                this.board[i][4] = new Queen(isWhite);
+                this.board[i][5] = new Bishop(isWhite);
+                this.board[i][6] = new Knight(isWhite);
+                this.board[i][7] = new Rook(isWhite);
             }
         }
-    }
+        }
+
 
     private void printTurn() {
         if (this.handCount % 2 == 0) {
@@ -145,3 +215,7 @@ public class Game {
     }
 
 }
+
+
+
+
