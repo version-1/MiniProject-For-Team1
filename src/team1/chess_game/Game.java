@@ -52,6 +52,7 @@ public class Game {
                         break;
 
                     case "moves":
+                        moves();
                         break;
                 }
             }
@@ -159,6 +160,7 @@ public class Game {
         for (int j = 0; j < board.length; j++) {
             for (int i = 0; i < board[0].length; i++) {
                 Position potential = new Position(i, j);
+                Piece potentialPiece = this.board[i][j];
                 if (board[rowInt][colInt].isValidMove(potential)) {
                     moves += potential.toString() + ", ";
                 }
@@ -172,11 +174,15 @@ public class Game {
     }
 
 
-    private void move() {
+    private void moves() {
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
-                if (board[i][j].isWhite) {
-                    // TODO
+                if ((board[i][j] != null) && !board[i][j].isWhite) {
+                    int colCol = j + 'a';
+                    String col = Character.toString((char)colCol);
+                    String row = Integer.toString(i + 1);
+                    System.out.println("Possible moves for " + col + row + ":");
+                    System.out.println(square(col + row));
                 }
             }
         }
@@ -187,13 +193,16 @@ public class Game {
         String square = "a7";
         char colChar = square.charAt(0);
         char rowChar = square.charAt(1);
-        int colInt = colChar - 'a';
-        int rowInt = rowChar - '1';
+        // int colInt = colChar - 'a';
+        // int rowInt = rowChar - '1';
         // System.out.println(colInt);
         // System.out.println(rowInt);
         int rowInt1 = 'a';
+        int colInt = 0 + 'a';
+        String col = Character.toString((char)colInt);
+        String row = Integer.toString(0 + 1);
         char rowChar1 = (char)rowInt1;
-        System.out.println(rowChar1);
+        System.out.println(col + row);
     }
 }
 
