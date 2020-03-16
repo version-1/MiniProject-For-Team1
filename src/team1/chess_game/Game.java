@@ -2,7 +2,6 @@ package team1.chess_game;
 
 import java.util.Scanner;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 
@@ -21,23 +20,18 @@ public class Game {
 
     public void start(Scanner scan) {
         renderBoard();
-
         while(true) {
         String ans = askUCI(scan);
-        // System.out.println(square(ans));
 
         // TODO:
         // if input is help, show help
         // if input is board, show board ( just call renderBoard method)
         // if input is resign, resign and show resign message (if you return false, game will be over)
         // if input is moves, show movable positions
-        // if input is UCI,  move piece and show board
-
+            // if input is UCI,  move piece and show board
 
             if (Objects.equals(ans, "help") || Objects.equals(ans, "board") ||
-                    Objects.equals(ans, "resign") || Objects.equals(ans, "moves") || Objects.equals(ans, "square")) {
-
-
+                    Objects.equals(ans, "resign") || Objects.equals(ans, "moves")) {
                 switch (ans) {
 
                     case "help":
@@ -47,7 +41,6 @@ public class Game {
                     case "board":
                         renderBoard();
                         break;
-
 
                     case "resign":
                         if (handCount % 2 != 0) {
@@ -60,31 +53,18 @@ public class Game {
 
                     case "moves":
                         break;
-
-                    case "square":
-                        String ans1 = askUCI(scan);
-                        System.out.println(square(ans1));
-                        break;
-
                 }
-
-            }if(ans.length() == 4 && Character.isLetter(ans.charAt(0)) && Character.isDigit(ans.charAt(1)) &&
+            }
+            if (ans.length() == 4 && Character.isLetter(ans.charAt(0)) && Character.isDigit(ans.charAt(1)) &&
                     Character.isLetter(ans.charAt(2)) && Character.isDigit(ans.charAt(3))) {
-
-
-
-            } if(ans.length() == 2 && Character.isLetter(ans.charAt(0)) && Character.isDigit(ans.charAt(1))){
-
             }
-
-            else{System.out.println("\nInvalid Input.");
+            if (ans.length() == 2 && Character.isLetter(ans.charAt(0)) && Character.isDigit(ans.charAt(1))) {
+                System.out.println(square(ans));
+            } else {
+                System.out.println("\nInvalid Input.");
             }
-
-
         }
-
     }
-
 
     private void help(){
         System.out.println("+==========================================================================+\n" +
@@ -95,7 +75,6 @@ public class Game {
                            "| * type UIC (e.g. bic3, e7e8q) to make a move                             |\n" +
                            "+==========================================================================+");
         }
-
 
 
     public String askUCI(Scanner scan) {
@@ -120,6 +99,7 @@ public class Game {
         renderFooter();
     }
 
+
     private void renderFooter() {
         String[] chars = {"a", "b", "c", "d", "e", "f", "g", "h"};
         System.out.println("");
@@ -129,10 +109,10 @@ public class Game {
         System.out.println("");
     }
 
+
     private void init() {
         for (int i = 0; i < this.board.length; i++) {
             Piece[] row = this.board[i];
-
 
             if (i == 1 || i == 6) {
                 boolean isWhite = i == 6;
@@ -140,7 +120,6 @@ public class Game {
                     this.board[i][j] = new Pawn(isWhite);
                 }
             }
-
 
             if (i == 0 || i == 7) {
                 boolean isWhite = i == 7;
@@ -164,6 +143,7 @@ public class Game {
           System.out.println("Black to Move");
         }
     }
+
 
     private String square(String square) {
         String moves = "{";
@@ -191,6 +171,7 @@ public class Game {
         return moves + "}";
     }
 
+
     private void move() {
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
@@ -200,6 +181,7 @@ public class Game {
             }
         }
     }
+
 
     public static void main(String[] args) {
         String square = "a7";
@@ -213,7 +195,6 @@ public class Game {
         char rowChar1 = (char)rowInt1;
         System.out.println(rowChar1);
     }
-
 }
 
 
