@@ -17,10 +17,12 @@ public class Game {
 
     public boolean start(Scanner scan) {
         renderBoard();
+        init();
         String ans = askUCI(scan);
+        System.out.println(square(ans));
 
         // TODO:
-        // if input is help, show hekp
+        // if input is help, show help
         // if input is board, show board ( just call renderBoard method)
         // if input is resign, resign and show regign message (if you return false, game will be over)
         // if input is moves, show movable positions
@@ -46,7 +48,7 @@ public class Game {
                     System.out.print(" " + row[j].render());
                 }
             }
-            System.out.println(" " + Integer.toString(8 - i));
+            System.out.println("  " + Integer.toString(8 - i));
         }
         renderFooter();
     }
@@ -89,8 +91,57 @@ public class Game {
         if (this.handCount % 2 == 0) {
           System.out.println("White to Move");
         } else {
-          System.out.println("White to Move");
+          System.out.println("Black to Move");
         }
+    }
+
+    private String square(String square) {
+        String moves = "{";
+        char colChar = square.charAt(0);
+        char rowChar = square.charAt(1);
+        int colInt = colChar - 'a';
+        int rowInt = rowChar - '1';
+        if (board[rowInt][colInt] == null) {
+            return "Invalid square!";
+        }
+        Position currentPosition = new Position(rowInt, colInt);
+        board[rowInt][colInt].setPosition(currentPosition);
+        for (int j = 0; j < board.length; j++) {
+            for (int i = 0; i < board[0].length; i++) {
+                Position potential = new Position(i, j);
+                if (board[rowInt][colInt].isValidMove(potential)) {
+                    moves += potential.toString() + ", ";
+                }
+            }
+        }
+        if (moves.length() > 2) {
+            String movesFilled = moves.substring(0, moves.length() - 2);
+            return movesFilled + "}";
+        }
+        return moves + "}";
+    }
+
+    private void move() {
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                if (board[i][j].isWhite) {
+                    // TODO
+                }
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        String square = "a7";
+        char colChar = square.charAt(0);
+        char rowChar = square.charAt(1);
+        int colInt = colChar - 'a';
+        int rowInt = rowChar - '1';
+        // System.out.println(colInt);
+        // System.out.println(rowInt);
+        int rowInt1 = 'a';
+        char rowChar1 = (char)rowInt1;
+        System.out.println(rowChar1);
     }
 
 }

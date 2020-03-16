@@ -52,15 +52,22 @@ public class Pawn extends Piece {
     @Override
     public boolean isValidMove(Position newPosition) {
         // Don't count with opponent's figure on the newPosition or in front of a pawn
-        if (this.position.getCol() == newPosition.getCol() && (this.position.getRow() + 1) == newPosition.getRow()) {
-            return true;
-        } else if (this.position.getRow() == 2 && this.position.getCol() == newPosition.getCol() &&
-                (this.position.getRow() + 2) == newPosition.getRow()) {
-            return true;
-        } else if (this.position.getRow() == 7 && this.position.getCol() == newPosition.getCol() &&
-                (this.position.getRow() + 1) == newPosition.getRow()) {
         // The pawn reached the end and got promoted
-            this.promote(newPiece);
+        //    this.promote(newPiece);
+        // starting position!
+        if (!super.isValidMove(position)) {
+            return false;
+        }
+        if ((this.position.getRow() == 1 && this.position.getCol() == newPosition.getCol() &&
+                (this.position.getRow() + 2) == newPosition.getRow()) || (this.position.getRow() == 1 &&
+                this.position.getCol() == newPosition.getCol() &&
+                (this.position.getRow() + 1) == newPosition.getRow())) {
+            return true;
+        }
+        if ((this.position.getRow() == 6 && this.position.getCol() == newPosition.getCol() &&
+                (this.position.getRow() - 2) == newPosition.getRow()) || (this.position.getRow() == 6 &&
+                this.position.getCol() == newPosition.getCol() &&
+                (this.position.getRow() - 1) == newPosition.getRow())) {
             return true;
         } else {
             return false;

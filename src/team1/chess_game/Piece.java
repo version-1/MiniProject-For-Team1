@@ -10,6 +10,16 @@ public abstract class Piece {
         this.value = value;
     }
 
+    public Piece(int value, boolean isWhite, Position position) {
+        this.value = value;
+        this.isWhite = isWhite;
+        this.position = position;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
+    }
+
     public abstract String render();
 
     public int getValue() {
@@ -23,7 +33,7 @@ public abstract class Piece {
     public abstract void move();
 
     public boolean isValidMove(Position newPosition) {
-        if (newPosition.getRow() > 0 && newPosition.getCol() > 0 && newPosition.getRow() < 8
+        if (newPosition.getRow() >= 0 && newPosition.getCol() >= 0 && newPosition.getRow() < 8
                 && newPosition.getCol() < 8) {
             return true;
         } else {

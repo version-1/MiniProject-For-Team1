@@ -4,7 +4,7 @@ public class Position {
     private int row;
     private int col;
 
-    public Position(int col, int row) {
+    public Position(int row, int col) {
         this.row = row;
         this.col = col;
     }
@@ -15,5 +15,14 @@ public class Position {
 
     public int getCol() {
         return col;
+    }
+
+    @Override
+    public String toString() {
+        int colInt = col + 'a';
+        char colLetter = (char)colInt;
+        return "(" + colLetter +
+                (row + 1) +
+                ')';
     }
 }

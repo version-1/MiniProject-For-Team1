@@ -10,7 +10,7 @@ public class Queen extends Piece {
 
     @Override
     public String render() {
-       return isWhite ?  "♔" : "♚";
+       return isWhite ?  "♕" : "♛";
     }
 
     public String toString() {
@@ -27,11 +27,9 @@ public class Queen extends Piece {
         if (!super.isValidMove(position)) {
             return false;
         }
-        if ((this.position.getCol() == newPosition.getCol() || this.position.getRow() == newPosition.getRow()) ||
-        (Math.abs(newPosition.getCol() - this.position.getCol()) == Math.abs(newPosition.getRow() - this.position.getRow()))) {
-        return true;
-        } else {
+        if (newPosition.getCol() == this.position.getCol() && newPosition.getRow() == this.position.getRow()) {
             return false;
-        }
+        } else return (this.position.getCol() == newPosition.getCol() || this.position.getRow() == newPosition.getRow()) ||
+                (Math.abs(newPosition.getCol() - this.position.getCol()) == Math.abs(newPosition.getRow() - this.position.getRow()));
     }
 }

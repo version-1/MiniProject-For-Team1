@@ -22,12 +22,12 @@ public class Rook extends Piece {
 
     @Override
     public boolean isValidMove(Position newPosition){
-        if(newPosition.getCol() == this.position.getCol() || newPosition.getRow() == this.position.getRow()){
-            return true;
-        }
-        else{
+        if (!super.isValidMove(newPosition)){
             return false;
         }
+        if (newPosition.getCol() == this.position.getCol() && newPosition.getRow() == this.position.getRow()) {
+            return false;
+        } else return newPosition.getCol() == this.position.getCol() || newPosition.getRow() == this.position.getRow();
     }
 
 }
