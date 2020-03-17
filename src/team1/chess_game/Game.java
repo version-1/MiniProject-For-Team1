@@ -58,6 +58,7 @@ public class Game {
             }
             if (ans.length() == 4 && Character.isLetter(ans.charAt(0)) && Character.isDigit(ans.charAt(1))
                     && Character.isLetter(ans.charAt(2)) && Character.isDigit(ans.charAt(3))) {
+                        makeMove(ans);
             }
             if (ans.length() == 2 && Character.isLetter(ans.charAt(0)) && Character.isDigit(ans.charAt(1))) {
                 System.out.println(square(ans));
@@ -197,6 +198,10 @@ public class Game {
             }
         }
         return true;
+    }
+
+    private void makeMove(String uci) {
+        // TODO:
     }
 
     private void moves() {
