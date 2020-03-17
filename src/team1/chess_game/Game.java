@@ -63,12 +63,13 @@ public class Game {
 
 
 
-           if (ans.length() == 4 && ans.charAt(0) >= 'a' && ans.charAt(0) <= 'h' && ans.charAt(1) >= '1' && ans.charAt(1) <= '8' &&
+           else if (ans.length() == 4 && ans.charAt(0) >= 'a' && ans.charAt(0) <= 'h' && ans.charAt(1) >= '1' && ans.charAt(1) <= '8' &&
            ans.charAt(2) >= 'a' && ans.charAt(2) <= 'h' && ans.charAt(3) >= '1' && ans.charAt(3) <= '8'){
                 makeMove(ans);
+
             }
 
-            if (ans.length() == 2 && ans.charAt(0) >= 'a' && ans.charAt(0) <= 'h' && ans.charAt(1) >= '1' && ans.charAt(1) <= '8'){
+            else if (ans.length() == 2 && ans.charAt(0) >= 'a' && ans.charAt(0) <= 'h' && ans.charAt(1) >= '1' && ans.charAt(1) <= '8'){
                 System.out.println(square(ans));
             } else {
                 System.out.println("\nInvalid Input.");
@@ -198,7 +199,7 @@ public class Game {
         }
 
         List<Position> posList = target.position.getPath(destination);
-        System.out.println(posList);
+        //System.out.println(posList);
         for (Position pos : posList) {
             Piece candidate = this.board[pos.getRow()][pos.getCol()];
             if (candidate != null && !candidate.position.equals(destination)) {
@@ -210,6 +211,7 @@ public class Game {
 
     private void makeMove(String uci) {
         // TODO:
+
     }
 
     private void moves() {
