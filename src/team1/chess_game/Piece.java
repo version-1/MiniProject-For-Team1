@@ -4,6 +4,7 @@ public abstract class Piece {
     private int value;
     boolean isWhite;
     protected Position position;
+    private boolean jump = false;
 
     public Piece(int value, boolean isWhite) {
         this.isWhite = isWhite;
@@ -24,6 +25,10 @@ public abstract class Piece {
 
     public int getValue() {
         return value;
+    }
+
+    public boolean getJump() {
+        return jump;
     }
 
     public void setValue(int value) {
