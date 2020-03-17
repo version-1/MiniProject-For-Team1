@@ -52,6 +52,7 @@ public class Game {
                         break;
 
                     case "moves":
+                        moves();
                         break;
                 }
             }
@@ -188,6 +189,7 @@ public class Game {
         }
 
         List<Position> posList = target.position.getPath(destination);
+        System.out.println(posList);
         for (Position pos : posList) {
             Piece candidate = this.board[pos.getRow()][pos.getCol()];
             if (candidate != null && !candidate.position.equals(destination)) {
@@ -197,11 +199,15 @@ public class Game {
         return true;
     }
 
-    private void move() {
+    private void moves() {
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
-                if (board[i][j].isWhite) {
-                    // TODO
+                if ((board[i][j] != null) && !board[i][j].isWhite) {
+                    int colCol = j + 'a';
+                    String col = Character.toString((char)colCol);
+                    String row = Integer.toString(i + 1);
+                    System.out.println("Possible moves for " + col + row + ":");
+                    System.out.println(square(col + row));
                 }
             }
         }
@@ -211,12 +217,15 @@ public class Game {
         String square = "a7";
         char colChar = square.charAt(0);
         char rowChar = square.charAt(1);
-        int colInt = colChar - 'a';
-        int rowInt = rowChar - '1';
+        // int colInt = colChar - 'a';
+        // int rowInt = rowChar - '1';
         // System.out.println(colInt);
         // System.out.println(rowInt);
         int rowInt1 = 'a';
-        char rowChar1 = (char) rowInt1;
-        System.out.println(rowChar1);
+        int colInt = 0 + 'a';
+        String col = Character.toString((char)colInt);
+        String row = Integer.toString(0 + 1);
+        char rowChar1 = (char)rowInt1;
+        System.out.println(col + row);
     }
 }
