@@ -59,19 +59,27 @@ public class Pawn extends Piece {
             return false;
         }
         if ((this.position.getRow() == 1 && this.position.getCol() == newPosition.getCol() &&
-                (this.position.getRow() + 2) == newPosition.getRow()) && this.isWhite
+                (this.position.getRow() + 2) == newPosition.getRow()) && !this.isWhite
                 || (this.position.getRow() == 1 && this.position.getCol() == newPosition.getCol() &&
-                (this.position.getRow() + 1) == newPosition.getRow() && this.isWhite)) {
+                (this.position.getRow() + 1) == newPosition.getRow() && !this.isWhite)
+                ||(this.position.getCol() == newPosition.getCol() &&
+                (this.position.getRow() + 1) == newPosition.getRow() && !this.isWhite)) {
             return true;
         }
+
         if ((this.position.getRow() == 6 && this.position.getCol() == newPosition.getCol() &&
-                (this.position.getRow() - 2) == newPosition.getRow() && !this.isWhite)
-                || (this.position.getRow() == 6 && this.position.getCol() == newPosition.getCol() &&
-                (this.position.getRow() - 1) == newPosition.getRow() && !this.isWhite)) {
+                (this.position.getRow() - 2) == newPosition.getRow() && this.isWhite)
+               || (this.position.getRow() == 6 && this.position.getCol() == newPosition.getCol() &&
+                (this.position.getRow() - 1) == newPosition.getRow() && this.isWhite)
+                ||(this.position.getCol() == newPosition.getCol() &&
+                (this.position.getRow() - 1) == newPosition.getRow() && this.isWhite)){
+
             return true;
-        } else {
-            return false;
+
         }
+
+            return false;
+
     }
 
     public boolean isPromoted() {
