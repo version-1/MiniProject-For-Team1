@@ -1,6 +1,7 @@
 package team1.chess_game;
 
 public class Knight extends Piece {
+    private boolean jump = true;
 
     public Knight(boolean isWhite) {
         super(2, isWhite);

@@ -22,7 +22,6 @@ public class King extends Piece {
         if (!super.isValidMove(position)) {
             return false;
         }
-
         if (Math.abs(newPosition.getCol() - this.position.getCol()) == 1 && newPosition.getRow() == this.position.getRow()
                 || Math.abs(newPosition.getRow() - this.position.getRow()) == 1 && newPosition.getCol() == this.position.getCol()
         || Math.abs(newPosition.getCol() - this.position.getCol()) == 1 && Math.abs(newPosition.getRow() - this.position.getRow()) == 1 ) {

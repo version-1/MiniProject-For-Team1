@@ -14,11 +14,11 @@ public class Pawn extends Piece {
 
     @Override
     public String render() {
-       return isWhite ?  "♙" : "♟";
+        return isWhite ? "♙" : "♟";
     }
 
     public void promote(Piece newPiece) {
-        if (newPiece.equals(new King(this.isWhite))|| newPiece.equals(new Pawn(this.isWhite))) {
+        if (newPiece.equals(new King(this.isWhite)) || newPiece.equals(new Pawn(this.isWhite))) {
             System.out.println("Cannot be promoted to King or Pawn.");
         } else {
             this.promoted = true;
@@ -33,6 +33,7 @@ public class Pawn extends Piece {
         System.out.println("Forward 1");
 
     }
+
     @Override
     public String toString() {
         return "Pawn{value='" + getValue() + "\'" + ", is white=" + isWhite +
@@ -62,23 +63,23 @@ public class Pawn extends Piece {
                 (this.position.getRow() + 2) == newPosition.getRow()) && !this.isWhite
                 || (this.position.getRow() == 1 && this.position.getCol() == newPosition.getCol() &&
                 (this.position.getRow() + 1) == newPosition.getRow() && !this.isWhite)
-                ||(this.position.getCol() == newPosition.getCol() &&
+                || (this.position.getCol() == newPosition.getCol() &&
                 (this.position.getRow() + 1) == newPosition.getRow() && !this.isWhite)) {
             return true;
         }
 
         if ((this.position.getRow() == 6 && this.position.getCol() == newPosition.getCol() &&
-                (this.position.getRow() - 2) == newPosition.getRow() && this.isWhite)
-               || (this.position.getRow() == 6 && this.position.getCol() == newPosition.getCol() &&
+                (this.position.getRow() - 2) == newPosition.getRow() && this.position.getRow() - 1 == newPosition.getRow() && this.isWhite)
+                || (this.position.getRow() == 6 && this.position.getCol() == newPosition.getCol() &&
                 (this.position.getRow() - 1) == newPosition.getRow() && this.isWhite)
-                ||(this.position.getCol() == newPosition.getCol() &&
-                (this.position.getRow() - 1) == newPosition.getRow() && this.isWhite)){
+                || (this.position.getCol() == newPosition.getCol() &&
+                (this.position.getRow() - 1) == newPosition.getRow() && this.isWhite)) {
 
             return true;
 
         }
 
-            return false;
+        return false;
 
     }
 
