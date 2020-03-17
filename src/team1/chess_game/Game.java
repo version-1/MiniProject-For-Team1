@@ -3,6 +3,7 @@ package team1.chess_game;
 import java.util.Scanner;
 import java.util.List;
 import java.util.Objects;
+import java.io.*;
 
 public class Game {
     private Piece[][] board;
@@ -30,6 +31,7 @@ public class Game {
             // if input is moves, show movable positions
             // if input is UCI, move piece and show board
 
+
             if (Objects.equals(ans, "help") || Objects.equals(ans, "board") || Objects.equals(ans, "resign")
                     || Objects.equals(ans, "moves")) {
                 switch (ans) {
@@ -56,11 +58,17 @@ public class Game {
                         break;
                 }
             }
-            if (ans.length() == 4 && Character.isLetter(ans.charAt(0)) && Character.isDigit(ans.charAt(1))
-                    && Character.isLetter(ans.charAt(2)) && Character.isDigit(ans.charAt(3))) {
-                        makeMove(ans);
+
+
+
+
+
+           if (ans.length() == 4 && ans.charAt(0) >= 'a' && ans.charAt(0) <= 'h' && ans.charAt(1) >= '1' && ans.charAt(1) <= '8' &&
+           ans.charAt(2) >= 'a' && ans.charAt(2) <= 'h' && ans.charAt(3) >= '1' && ans.charAt(3) <= '8'){
+                makeMove(ans);
             }
-            if (ans.length() == 2 && Character.isLetter(ans.charAt(0)) && Character.isDigit(ans.charAt(1))) {
+
+            if (ans.length() == 2 && ans.charAt(0) >= 'a' && ans.charAt(0) <= 'h' && ans.charAt(1) >= '1' && ans.charAt(1) <= '8'){
                 System.out.println(square(ans));
             } else {
                 System.out.println("\nInvalid Input.");
