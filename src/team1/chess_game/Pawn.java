@@ -69,7 +69,7 @@ public class Pawn extends Piece {
         }
 
         if ((this.position.getRow() == 6 && this.position.getCol() == newPosition.getCol() &&
-                (this.position.getRow() - 2) == newPosition.getRow() && this.position.getRow() - 1 == newPosition.getRow() && this.isWhite)
+                (this.position.getRow() - 2) == newPosition.getRow() && this.isWhite)
                 || (this.position.getRow() == 6 && this.position.getCol() == newPosition.getCol() &&
                 (this.position.getRow() - 1) == newPosition.getRow() && this.isWhite)
                 || (this.position.getCol() == newPosition.getCol() &&
