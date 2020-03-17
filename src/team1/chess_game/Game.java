@@ -3,6 +3,7 @@ package team1.chess_game;
 import java.util.Scanner;
 import java.util.List;
 import java.util.Objects;
+import java.io.*;
 
 public class Game {
     private Piece[][] board;
@@ -48,14 +49,14 @@ public class Game {
                         break;
                 }
             }
-            
+
             if (ans.length() == 4 && Character.isLetter(ans.charAt(0)) && Character.isDigit(ans.charAt(1))
                     && Character.isLetter(ans.charAt(2)) && Character.isDigit(ans.charAt(3))) {
                 System.out.println(makeMove(ans));
             }
 
             if (ans.length() == 2 && Character.isLetter(ans.charAt(0)) && Character.isDigit(ans.charAt(1))) {
-                System.out.println(square(ans));
+
             } else {
                 System.out.println("\nInvalid Input.");
             }
