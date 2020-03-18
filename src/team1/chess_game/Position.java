@@ -25,7 +25,7 @@ public class Position {
         int colInt = col + 'a';
         char colLetter = (char)colInt;
         return "(" + colLetter +
-                (row + 1) +
+                (8 - row) +
                 ')';
     }
 

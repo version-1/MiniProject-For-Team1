@@ -9,9 +9,11 @@ public class Game {
     private final static int BOARD_SIZE = 8;
     private Piece[][] board;
     private int handCount = 0;
+    private Uci uci;
 
     public Game() {
         this.board = new Piece[BOARD_SIZE][BOARD_SIZE];
+        this.uci = new Uci(BOARD_SIZE);
         this.init();
     }
 
@@ -50,17 +52,14 @@ public class Game {
                         moves();
                         break;
                 }
-            } else if (ans.length() == 4 && ans.charAt(0) >= 'a' && ans.charAt(0) <= 'h' && ans.charAt(1) >= '1'
-                    && ans.charAt(1) <= '8' && ans.charAt(2) >= 'a' && ans.charAt(2) <= 'h' && ans.charAt(3) >= '1'
-                    && ans.charAt(3) <= '8') {
+            } else if (ans.length() == 4 && uci.validate(ans.substring(0, 2)) && uci.validate(ans.substring(2, 4))) {
                 if (makeMove(ans)) {
                     System.out.println("OK");
                     renderBoard();
                     incrementHandCount();
                 }
 
-            } else if (ans.length() == 2 && ans.charAt(0) >= 'a' && ans.charAt(0) <= 'h' && ans.charAt(1) >= '1'
-                    && ans.charAt(1) <= '8') {
+            } else if (ans.length() == 2 && uci.validate(ans)) {
                 System.out.println(square(ans));
 
             } else {
@@ -157,30 +156,23 @@ public class Game {
 
     private String square(String square) {
         String moves = "{";
-        char colChar = square.charAt(0);
-        char rowChar = square.charAt(1);
-        int colInt = colChar - 'a';
-        int rowInt = rowChar - '1';
-        try {
-            if (board[rowInt][colInt] == null) {
-                return "Invalid square!";
-            }
-            Piece target = board[rowInt][colInt];
-            for (int j = 0; j < board.length; j++) {
-                for (int i = 0; i < board[0].length; i++) {
-                    Position potential = new Position(i, j);
-                    if (isValidMove(target, potential)) {
-                        moves += potential.toString() + ", ";
-                    }
+        Position uci = this.uci.resolve(square);
+        if (uci == null) {
+            return null;
+        }
+        Piece target = board[uci.getRow()][uci.getCol()];
+        int size = board.length;
+        for (int j = 0; j < size; j++) {
+            for (int i = 0; i < size; i++) {
+                Position potential = new Position(i, j);
+                if (isValidMove(target, potential)) {
+                    moves += potential.toString() + ", ";
                 }
             }
-            if (moves.length() > 2) {
-                String movesFilled = moves.substring(0, moves.length() - 2);
-                return movesFilled + "}";
-            }
-
-        } catch (Exception e) {
-            return "Invalid input, please try again";
+        }
+        if (moves.length() > 2) {
+            String movesFilled = moves.substring(0, moves.length() - 2);
+            return movesFilled + "}";
         }
 
         return moves + "}";
@@ -210,41 +202,31 @@ public class Game {
     }
 
     private boolean makeMove(String uci) {
-        char colChar = uci.charAt(0);
-        char rowChar = uci.charAt(1);
-        char newColChar = uci.charAt(2);
-        char newRowChar = uci.charAt(3);
-        int colInt = colChar - 'a';
-        int rowInt = (BOARD_SIZE - 1) - (rowChar - '1');
-        int newColInt = newColChar - 'a';
-        int newRowInt = (BOARD_SIZE - 1) - (newRowChar - '1');
-
-        try {
-            Piece pieceToMove = board[rowInt][colInt];
-            Position destination = new Position(newRowInt, newColInt);
-
-            if (pieceToMove == null) {
-                System.out.println("Piece is missing");
-                return false;
-            }
-
-            if (isWhiteTurn() != pieceToMove.isWhite) {
-                System.out.println("Don't move a opponent piece! Stupid!");
-                return false;
-            }
-
-            if (isValidMove(pieceToMove, destination)) {
-                board[newRowInt][newColInt] = pieceToMove;
-                board[newRowInt][newColInt].setPosition(destination);
-                board[rowInt][colInt] = null;
-                return true;
-            }
-
-        } catch (Exception e) {
+        Position target = this.uci.resolve(uci.substring(0, 2));
+        Position destination = this.uci.resolve(uci.substring(2, 4));
+        if (target == null || destination == null) {
             System.out.println("Invalid input, please try again");
             return false;
         }
-        System.out.println("Invalid input, please try again");
+
+        Piece pieceToMove = board[target.getRow()][target.getCol()];
+
+        if (pieceToMove == null) {
+            System.out.println("Piece is missing");
+            return false;
+        }
+
+        if (isWhiteTurn() != pieceToMove.isWhite) {
+            System.out.println("Don't move a opponent piece! Stupid!");
+            return false;
+        }
+
+        if (isValidMove(pieceToMove, destination)) {
+            board[destination.getRow()][destination.getCol()] = pieceToMove;
+            board[destination.getRow()][destination.getCol()].setPosition(destination);
+            board[target.getRow()][target.getCol()] = null;
+            return true;
+        }
         return false;
     }
 
