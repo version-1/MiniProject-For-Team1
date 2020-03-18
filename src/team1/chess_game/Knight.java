@@ -9,7 +9,7 @@ public class Knight extends Piece {
 
     @Override
     public String render() {
-        return isWhite ?  "♘" : "♞" ;
+        return isWhite ?  "♞" : "♘" ;
     }
 
     @Override

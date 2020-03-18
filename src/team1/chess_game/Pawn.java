@@ -14,7 +14,7 @@ public class Pawn extends Piece {
 
     @Override
     public String render() {
-        return isWhite ? "♙" : "♟";
+        return isWhite ? "♟" : "♙";
     }
 
     public void promote(Piece newPiece) {

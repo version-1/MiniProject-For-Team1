@@ -47,7 +47,7 @@ public class Game {
                         break;
 
                     case "moves":
-                        //moves();
+                        moves();
                         break;
                 }
             } else if (ans.length() == 4 && ans.charAt(0) >= 'a' && ans.charAt(0) <= 'h' && ans.charAt(1) >= '1' && ans.charAt(1) <= '8' &&
@@ -90,7 +90,7 @@ public class Game {
                     System.out.print(" " + row[j].render());
                 }
             }
-            System.out.println("  " + Integer.toString(8 - i));
+            System.out.println("  " + Integer.toString(i + 1));
         }
         renderFooter();
     }
@@ -216,7 +216,7 @@ public class Game {
                 Piece pieceToMove = board[rowInt][colInt];
                 Position destination = new Position(newRowInt, newColInt);
 
-                if (pieceToMove == null || (handCount % 2 == 0 && !pieceToMove.isWhite) || (handCount % 2 == 1 && pieceToMove.isWhite)) {
+                if (pieceToMove == null || (handCount % 2 == 0 && !pieceToMove.isWhite) || (handCount % 2 != 0 && pieceToMove.isWhite)) {
                     System.out.println("Invalid square!");
                     return false;
                 }
