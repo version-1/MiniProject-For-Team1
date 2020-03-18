@@ -20,17 +20,10 @@ public class Game {
 
     public void start(Scanner scan) {
         renderBoard();
+
         while (true) {
             String ans = askUCI(scan);
-
-            // TODO:
-            // if input is help, show help
-            // if input is board, show board ( just call renderBoard method)
-            // if input is resign, resign and show resign message (if you return false, game
-            // will be over)
-            // if input is moves, show movable positions
-            // if input is UCI, move piece and show board
-
+            System.out.println(handCount);
 
             if (Objects.equals(ans, "help") || Objects.equals(ans, "board") || Objects.equals(ans, "resign")
                     || Objects.equals(ans, "moves")) {
@@ -54,23 +47,17 @@ public class Game {
                         break;
 
                     case "moves":
-                        moves();
+                        //moves();
                         break;
                 }
-            }
-
-
-
-
-
-           else if (ans.length() == 4 && ans.charAt(0) >= 'a' && ans.charAt(0) <= 'h' && ans.charAt(1) >= '1' && ans.charAt(1) <= '8' &&
-           ans.charAt(2) >= 'a' && ans.charAt(2) <= 'h' && ans.charAt(3) >= '1' && ans.charAt(3) <= '8'){
+            } else if (ans.length() == 4 && ans.charAt(0) >= 'a' && ans.charAt(0) <= 'h' && ans.charAt(1) >= '1' && ans.charAt(1) <= '8' &&
+                    ans.charAt(2) >= 'a' && ans.charAt(2) <= 'h' && ans.charAt(3) >= '1' && ans.charAt(3) <= '8') {
                 makeMove(ans);
+                incrementHandCount();
 
-            }
-
-            else if (ans.length() == 2 && ans.charAt(0) >= 'a' && ans.charAt(0) <= 'h' && ans.charAt(1) >= '1' && ans.charAt(1) <= '8'){
+            } else if (ans.length() == 2 && ans.charAt(0) >= 'a' && ans.charAt(0) <= 'h' && ans.charAt(1) >= '1' && ans.charAt(1) <= '8') {
                 System.out.println(square(ans));
+
             } else {
                 System.out.println("\nInvalid Input.");
             }
@@ -109,7 +96,7 @@ public class Game {
     }
 
     private void renderFooter() {
-        String[] chars = { "a", "b", "c", "d", "e", "f", "g", "h" };
+        String[] chars = {"a", "b", "c", "d", "e", "f", "g", "h"};
         System.out.println("");
         for (int i = 0; i < chars.length; i++) {
             System.out.print(" " + chars[i]);
@@ -165,23 +152,28 @@ public class Game {
         char rowChar = square.charAt(1);
         int colInt = colChar - 'a';
         int rowInt = rowChar - '1';
-        if (board[rowInt][colInt] == null) {
-            return "Invalid square!";
-        }
-
-        Piece target = board[rowInt][colInt];
-        for (int j = 0; j < board.length; j++) {
-            for (int i = 0; i < board[0].length; i++) {
-                Position potential = new Position(i, j);
-                if (isValidMove(target, potential)) {
-                    moves += potential.toString() + ", ";
+        try {
+            if (board[rowInt][colInt] == null) {
+                return "Invalid square!";
+            }
+            Piece target = board[rowInt][colInt];
+            for (int j = 0; j < board.length; j++) {
+                for (int i = 0; i < board[0].length; i++) {
+                    Position potential = new Position(i, j);
+                    if (isValidMove(target, potential)) {
+                        moves += potential.toString() + ", ";
+                    }
                 }
             }
+            if (moves.length() > 2) {
+                String movesFilled = moves.substring(0, moves.length() - 2);
+                return movesFilled + "}";
+            }
+
+        } catch (Exception e) {
+            return "Invalid input, please try again";
         }
-        if (moves.length() > 2) {
-            String movesFilled = moves.substring(0, moves.length() - 2);
-            return movesFilled + "}";
-        }
+
         return moves + "}";
     }
 
@@ -199,7 +191,9 @@ public class Game {
         }
 
         List<Position> posList = target.position.getPath(destination);
+
         //System.out.println(posList);
+
         for (Position pos : posList) {
             Piece candidate = this.board[pos.getRow()][pos.getCol()];
             if (candidate != null && !candidate.position.equals(destination)) {
@@ -209,38 +203,72 @@ public class Game {
         return true;
     }
 
+
     private void makeMove(String uci) {
         // TODO:
 
-    }
+        private boolean makeMove (String uci){
+            char colChar = uci.charAt(0);
+            char rowChar = uci.charAt(1);
+            char newColChar = uci.charAt(2);
+            char newRowChar = uci.charAt(3);
+            int colInt = colChar - 'a';
+            int rowInt = rowChar - '1';
+            int newColInt = newColChar - 'a';
+            int newRowInt = newRowChar - '1';
+            try {
+                Piece pieceToMove = board[rowInt][colInt];
+                Position destination = new Position(newRowInt, newColInt);
 
-    private void moves() {
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[i].length; j++) {
-                if ((board[i][j] != null) && !board[i][j].isWhite) {
-                    int colCol = j + 'a';
-                    String col = Character.toString((char)colCol);
-                    String row = Integer.toString(i + 1);
-                    System.out.println("Possible moves for " + col + row + ":");
-                    System.out.println(square(col + row));
+                if (pieceToMove == null || (handCount % 2 == 0 && !pieceToMove.isWhite) || (handCount % 2 == 1 && pieceToMove.isWhite)) {
+                    System.out.println("Invalid square!");
+                    return false;
+                }
+
+                if (isValidMove(pieceToMove, destination)) {
+                    board[newRowInt][newColInt] = pieceToMove;
+                    board[newRowInt][newColInt].setPosition(destination);
+                    board[rowInt][colInt] = null;
+                    System.out.println("OK");
+                    return true;
+                }
+
+            } catch (Exception e) {
+                System.out.println("Invalid input, please try again");
+                return false;
+            }
+            System.out.println("Invalid input, please try again");
+            return false;
+        }
+
+        private void moves () {
+            if (handCount % 2 == 0) {
+                for (int i = 0; i < board.length; i++) {
+                    for (int j = 0; j < board[i].length; j++) {
+                        if (board[i][j] != null && board[i][j].isWhite) {
+                            int colCol = j + 'a';
+                            String col = Character.toString((char) colCol);
+                            String row = Integer.toString(i + 1);
+                            System.out.println("Possible moves for " + col + row + ":");
+                            System.out.println(square(col + row));
+                        }
+                    }
+                }
+            }
+            if (handCount % 2 == 1) {
+                for (int i = 0; i < board.length; i++) {
+                    for (int j = 0; j < board[i].length; j++) {
+                        if (board[i][j] != null && !board[i][j].isWhite) {
+                            int colCol = j + 'a';
+                            String col = Character.toString((char) colCol);
+                            String row = Integer.toString(i + 1);
+                            System.out.println("Possible moves for " + col + row + ":");
+                            System.out.println(square(col + row));
+                        }
+                    }
                 }
             }
         }
-    }
 
-    public static void main(String[] args) {
-        String square = "a7";
-        char colChar = square.charAt(0);
-        char rowChar = square.charAt(1);
-        // int colInt = colChar - 'a';
-        // int rowInt = rowChar - '1';
-        // System.out.println(colInt);
-        // System.out.println(rowInt);
-        int rowInt1 = 'a';
-        int colInt = 0 + 'a';
-        String col = Character.toString((char)colInt);
-        String row = Integer.toString(0 + 1);
-        char rowChar1 = (char)rowInt1;
-        System.out.println(col + row);
     }
 }
