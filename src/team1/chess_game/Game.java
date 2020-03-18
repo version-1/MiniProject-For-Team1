@@ -3,7 +3,6 @@ package team1.chess_game;
 import java.util.Scanner;
 import java.util.List;
 import java.util.Objects;
-import java.io.*;
 
 public class Game {
     private final static int BOARD_SIZE = 8;
@@ -158,9 +157,12 @@ public class Game {
         String moves = "{";
         Position uci = this.uci.resolve(square);
         if (uci == null) {
-            return null;
+            return "uci is invalid";
         }
         Piece target = board[uci.getRow()][uci.getCol()];
+        if (target == null) {
+            return "Piece is missing";
+        }
         int size = board.length;
         for (int j = 0; j < size; j++) {
             for (int i = 0; i < size; i++) {
@@ -182,6 +184,7 @@ public class Game {
         Piece piece = this.board[destination.getRow()][destination.getCol()];
         Boolean isFriend = piece != null && piece.isWhite == target.isWhite;
         Boolean isValid = !isFriend && target.isValidMove(destination);
+
 
         if (!isValid) {
             return false;
