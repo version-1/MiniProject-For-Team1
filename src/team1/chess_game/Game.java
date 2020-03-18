@@ -6,11 +6,12 @@ import java.util.Objects;
 import java.io.*;
 
 public class Game {
+    private final static int BOARD_SIZE = 8;
     private Piece[][] board;
     private int handCount = 0;
 
     public Game() {
-        this.board = new Piece[8][8];
+        this.board = new Piece[BOARD_SIZE][BOARD_SIZE];
         this.init();
     }
 
@@ -23,7 +24,6 @@ public class Game {
 
         while (true) {
             String ans = askUCI(scan);
-            System.out.println(handCount);
 
             if (Objects.equals(ans, "help") || Objects.equals(ans, "board") || Objects.equals(ans, "resign")
                     || Objects.equals(ans, "moves")) {
@@ -38,10 +38,10 @@ public class Game {
                         break;
 
                     case "resign":
-                        if (handCount % 2 != 0) {
-                            System.out.println("Game over - White won by resignation");
-                        } else {
+                        if (this.isWhiteTurn()) {
                             System.out.println("Game over - Black won by resignation");
+                        } else {
+                            System.out.println("Game over - White won by resignation");
                         }
                         System.exit(0);
                         break;
@@ -50,12 +50,17 @@ public class Game {
                         moves();
                         break;
                 }
-            } else if (ans.length() == 4 && ans.charAt(0) >= 'a' && ans.charAt(0) <= 'h' && ans.charAt(1) >= '1' && ans.charAt(1) <= '8' &&
-                    ans.charAt(2) >= 'a' && ans.charAt(2) <= 'h' && ans.charAt(3) >= '1' && ans.charAt(3) <= '8') {
-                    if(makeMove(ans)){
-                    incrementHandCount();}
+            } else if (ans.length() == 4 && ans.charAt(0) >= 'a' && ans.charAt(0) <= 'h' && ans.charAt(1) >= '1'
+                    && ans.charAt(1) <= '8' && ans.charAt(2) >= 'a' && ans.charAt(2) <= 'h' && ans.charAt(3) >= '1'
+                    && ans.charAt(3) <= '8') {
+                if (makeMove(ans)) {
+                    System.out.println("OK");
+                    renderBoard();
+                    incrementHandCount();
+                }
 
-            } else if (ans.length() == 2 && ans.charAt(0) >= 'a' && ans.charAt(0) <= 'h' && ans.charAt(1) >= '1' && ans.charAt(1) <= '8') {
+            } else if (ans.length() == 2 && ans.charAt(0) >= 'a' && ans.charAt(0) <= 'h' && ans.charAt(1) >= '1'
+                    && ans.charAt(1) <= '8') {
                 System.out.println(square(ans));
 
             } else {
@@ -95,8 +100,12 @@ public class Game {
         renderFooter();
     }
 
+    public boolean isWhiteTurn() {
+        return this.handCount % 2 == 0;
+    }
+
     private void renderFooter() {
-        String[] chars = {"a", "b", "c", "d", "e", "f", "g", "h"};
+        String[] chars = { "a", "b", "c", "d", "e", "f", "g", "h" };
         System.out.println("");
         for (int i = 0; i < chars.length; i++) {
             System.out.print(" " + chars[i]);
@@ -139,7 +148,7 @@ public class Game {
     }
 
     private void printTurn() {
-        if (this.handCount % 2 == 0) {
+        if (isWhiteTurn()) {
             System.out.println("White to Move");
         } else {
             System.out.println("Black to Move");
@@ -200,68 +209,71 @@ public class Game {
         return true;
     }
 
-        private boolean makeMove (String uci){
-            char colChar = uci.charAt(0);
-            char rowChar = uci.charAt(1);
-            char newColChar = uci.charAt(2);
-            char newRowChar = uci.charAt(3);
-            int colInt = colChar - 'a';
-            int rowInt = rowChar - '1';
-            int newColInt = newColChar - 'a';
-            int newRowInt = newRowChar - '1';
-            try {
-                Piece pieceToMove = board[rowInt][colInt];
-                Position destination = new Position(newRowInt, newColInt);
+    private boolean makeMove(String uci) {
+        char colChar = uci.charAt(0);
+        char rowChar = uci.charAt(1);
+        char newColChar = uci.charAt(2);
+        char newRowChar = uci.charAt(3);
+        int colInt = colChar - 'a';
+        int rowInt = (BOARD_SIZE - 1) - (rowChar - '1');
+        int newColInt = newColChar - 'a';
+        int newRowInt = (BOARD_SIZE - 1) - (newRowChar - '1');
 
-                if (pieceToMove == null || (handCount % 2 == 0 && !pieceToMove.isWhite) || (handCount % 2 != 0 && pieceToMove.isWhite)) {
-                    System.out.println("Invalid square!");
-                    return false;
-                }
+        try {
+            Piece pieceToMove = board[rowInt][colInt];
+            Position destination = new Position(newRowInt, newColInt);
 
-                if (isValidMove(pieceToMove, destination)) {
-                    board[newRowInt][newColInt] = pieceToMove;
-                    board[newRowInt][newColInt].setPosition(destination);
-                    board[rowInt][colInt] = null;
-                    System.out.println("OK");
-                    renderBoard();
-                    return true;
-                }
-
-            } catch (Exception e) {
-                System.out.println("Invalid input, please try again");
+            if (pieceToMove == null) {
+                System.out.println("Piece is missing");
                 return false;
             }
+
+            if (isWhiteTurn() != pieceToMove.isWhite) {
+                System.out.println("Don't move a opponent piece! Stupid!");
+                return false;
+            }
+
+            if (isValidMove(pieceToMove, destination)) {
+                board[newRowInt][newColInt] = pieceToMove;
+                board[newRowInt][newColInt].setPosition(destination);
+                board[rowInt][colInt] = null;
+                return true;
+            }
+
+        } catch (Exception e) {
             System.out.println("Invalid input, please try again");
             return false;
         }
+        System.out.println("Invalid input, please try again");
+        return false;
+    }
 
-        private void moves () {
-            if (handCount % 2 == 0) {
-                for (int i = 0; i < board.length; i++) {
-                    for (int j = 0; j < board[i].length; j++) {
-                        if (board[i][j] != null && board[i][j].isWhite) {
-                            int colCol = j + 'a';
-                            String col = Character.toString((char) colCol);
-                            String row = Integer.toString(i + 1);
-                            System.out.println("Possible moves for " + col + row + ":");
-                            System.out.println(square(col + row));
-                        }
+    private void moves() {
+        if (isWhiteTurn()) {
+            for (int i = 0; i < board.length; i++) {
+                for (int j = 0; j < board[i].length; j++) {
+                    if (board[i][j] != null && board[i][j].isWhite) {
+                        int colCol = j + 'a';
+                        String col = Character.toString((char) colCol);
+                        String row = Integer.toString(i + 1);
+                        System.out.println("Possible moves for " + col + row + ":");
+                        System.out.println(square(col + row));
                     }
                 }
             }
-            if (handCount % 2 == 1) {
-                for (int i = 0; i < board.length; i++) {
-                    for (int j = 0; j < board[i].length; j++) {
-                        if (board[i][j] != null && !board[i][j].isWhite) {
-                            int colCol = j + 'a';
-                            String col = Character.toString((char) colCol);
-                            String row = Integer.toString(i + 1);
-                            System.out.println("Possible moves for " + col + row + ":");
-                            System.out.println(square(col + row));
-                        }
+        } else {
+            for (int i = 0; i < board.length; i++) {
+                for (int j = 0; j < board[i].length; j++) {
+                    if (board[i][j] != null && !board[i][j].isWhite) {
+                        int colCol = j + 'a';
+                        String col = Character.toString((char) colCol);
+                        String row = Integer.toString(i + 1);
+                        System.out.println("Possible moves for " + col + row + ":");
+                        System.out.println(square(col + row));
                     }
                 }
             }
         }
-
     }
+
+}
