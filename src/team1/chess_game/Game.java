@@ -52,8 +52,8 @@ public class Game {
                 }
             } else if (ans.length() == 4 && ans.charAt(0) >= 'a' && ans.charAt(0) <= 'h' && ans.charAt(1) >= '1' && ans.charAt(1) <= '8' &&
                     ans.charAt(2) >= 'a' && ans.charAt(2) <= 'h' && ans.charAt(3) >= '1' && ans.charAt(3) <= '8') {
-                makeMove(ans);
-                incrementHandCount();
+                    if(makeMove(ans)){
+                    incrementHandCount();}
 
             } else if (ans.length() == 2 && ans.charAt(0) >= 'a' && ans.charAt(0) <= 'h' && ans.charAt(1) >= '1' && ans.charAt(1) <= '8') {
                 System.out.println(square(ans));
@@ -203,10 +203,6 @@ public class Game {
         return true;
     }
 
-
-    private void makeMove(String uci) {
-        // TODO:
-
         private boolean makeMove (String uci){
             char colChar = uci.charAt(0);
             char rowChar = uci.charAt(1);
@@ -230,6 +226,7 @@ public class Game {
                     board[newRowInt][newColInt].setPosition(destination);
                     board[rowInt][colInt] = null;
                     System.out.println("OK");
+                    renderBoard();
                     return true;
                 }
 
@@ -271,4 +268,3 @@ public class Game {
         }
 
     }
-}
