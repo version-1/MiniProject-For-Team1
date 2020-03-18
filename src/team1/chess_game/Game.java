@@ -90,7 +90,7 @@ public class Game {
                     System.out.print(" " + row[j].render());
                 }
             }
-            System.out.println("  " + Integer.toString(i + 1));
+            System.out.println("  " + Integer.toString(this.board.length - i));
         }
         renderFooter();
     }
@@ -191,9 +191,6 @@ public class Game {
         }
 
         List<Position> posList = target.position.getPath(destination);
-
-        //System.out.println(posList);
-
         for (Position pos : posList) {
             Piece candidate = this.board[pos.getRow()][pos.getCol()];
             if (candidate != null && !candidate.position.equals(destination)) {
