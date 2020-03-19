@@ -1,7 +1,5 @@
 package team1.chess_game;
 
-import javax.swing.*;
-import java.util.ArrayList;
 import java.util.List;
 
 

@@ -6,15 +6,14 @@ import java.util.List;
 import java.util.Objects;
 
 public class Game {
-    private final static int BOARD_SIZE = 8;
     private Piece[][] board;
     public int handCount = 0;
     private Uci uci;
 
 
     public Game() {
-        this.board = new Piece[BOARD_SIZE][BOARD_SIZE];
-        this.uci = new Uci(BOARD_SIZE);
+        this.board = new Piece[8][8];
+        uci = new Uci(this.board.length);
         this.init();
     }
 
@@ -41,10 +40,10 @@ public class Game {
                         break;
 
                     case "resign":
-                        if (this.isWhiteTurn()) {
-                            System.out.println("Game over - Black won by resignation");
-                        } else {
+                        if (handCount % 2 != 0) {
                             System.out.println("Game over - White won by resignation");
+                        } else {
+                            System.out.println("Game over - Black won by resignation");
                         }
                         System.exit(0);
                         break;
@@ -53,13 +52,11 @@ public class Game {
                         moves();
                         break;
                 }
-
             } else if (ans.length() == 4 && uci.validate(ans.substring(0, 2)) && uci.validate(ans.substring(2, 4))) {
                 if (makeMove(ans)) {
-                    System.out.println("OK");
-                    renderBoard();
                     incrementHandCount();
                 }
+
             } else if (ans.length() == 2 && uci.validate(ans)) {
                 System.out.println(square(ans));
 
@@ -75,7 +72,7 @@ public class Game {
                 + "| * type 'resign' to resign                                                |\n"
                 + "| * type 'moves' to list all possible moves                                |\n"
                 + "| * type a square (e.g. b1, e2) to list all possible moves for that square |\n"
-                + "| * type UIC (e.g. bic3, e7e8q) to make a move                             |\n"
+                + "| * type UIC (e.g. b1c3, e7e8q) to make a move                             |\n"
                 + "+==========================================================================+");
     }
 
@@ -95,13 +92,9 @@ public class Game {
                     System.out.print(" " + row[j].render());
                 }
             }
-            System.out.println("  " + Integer.toString(this.board.length - i));
+            System.out.println("  " + Integer.toString(i + 1));
         }
         renderFooter();
-    }
-
-    public boolean isWhiteTurn() {
-        return this.handCount % 2 == 0;
     }
 
     private void renderFooter() {
@@ -130,8 +123,8 @@ public class Game {
                 this.board[i][0] = new Rook(isWhite);
                 this.board[i][1] = new Knight(isWhite);
                 this.board[i][2] = new Bishop(isWhite);
-                this.board[i][3] = new King(isWhite);
-                this.board[i][4] = new Queen(isWhite);
+                this.board[i][3] = new Queen(isWhite);
+                this.board[i][4] = new King(isWhite);
                 this.board[i][5] = new Bishop(isWhite);
                 this.board[i][6] = new Knight(isWhite);
                 this.board[i][7] = new Rook(isWhite);
@@ -148,7 +141,7 @@ public class Game {
     }
 
     private void printTurn() {
-        if (isWhiteTurn()) {
+        if (this.handCount % 2 == 0) {
             System.out.println("White to Move");
         } else {
             System.out.println("Black to Move");
@@ -158,26 +151,32 @@ public class Game {
     private String square(String square) {
         String moves = "{";
         Position uci = this.uci.resolve(square);
-        Piece target = board[uci.getRow()][uci.getCol()];
+        if (uci == null) {
+            return null;
+        }
+        int colInt = uci.getCol();
+        int rowInt = uci.getRow();
         try {
-            if (board[uci.getRow()][uci.getCol()] == null) {
+            if (board[rowInt][colInt] == null) {
                 return "Invalid square!";
 
 
             }
-            if (uci == null) {
-                return "uci is invalid";
-            }
-
-            if (target == null) {
-                return "Piece is missing";
-            }
+            Piece target = board[rowInt][colInt];
 
             if (target.getValue() == 1) {
-                moves += pawnKilling(uci.getRow(), uci.getCol());
+                moves += pawnKilling(rowInt, colInt);
             }
 
-            if (target.getValue() == 1 && board[uci.getRow() + 1][uci.getCol()] != null && !target.isWhite) {
+            if (target.getValue() == 1 && board[rowInt + 1][colInt] != null && !target.isWhite) {
+                if (moves.length() > 2) {
+                    String movesFilled = moves.substring(0, moves.length() - 2);
+                    return movesFilled + "}";
+                } else {
+                    return moves + "}";
+                }
+            }
+            if (target.getValue() == 1 && board[rowInt - 1][colInt] != null && target.isWhite) {
                 if (moves.length() > 2) {
                     String movesFilled = moves.substring(0, moves.length() - 2);
                     return movesFilled + "}";
@@ -186,29 +185,19 @@ public class Game {
                 }
             }
 
-            if (target.getValue() == 1 && board[uci.getRow() - 1][uci.getCol()] != null && target.isWhite) {
-                if (moves.length() > 2) {
-                    String movesFilled = moves.substring(0, moves.length() - 2);
-                    return movesFilled + "}";
-                } else {
-                    return moves + "}";
-                }
-            }
-
-            int size = board.length;
-            for (int j = 0; j < size; j++) {
-                for (int i = 0; i < size; i++) {
+            for (int j = 0; j < board.length; j++) {
+                for (int i = 0; i < board[0].length; i++) {
                     Position potential = new Position(i, j);
                     if (isValidMove(target, potential)) {
                         moves += potential.toString() + ", ";
                     }
                 }
             }
-
             if (moves.length() > 2) {
                 String movesFilled = moves.substring(0, moves.length() - 2);
                 return movesFilled + "}";
             }
+
         } catch (Exception e) {
             return "Invalid input, please try again";
         }
@@ -248,7 +237,6 @@ public class Game {
         boolean isFriend = piece != null && piece.isWhite == target.isWhite;
         boolean isValid = !isFriend && target.isValidMove(destination);
 
-
         if (!isValid) {
             return false;
         }
@@ -258,6 +246,7 @@ public class Game {
         }
 
         List<Position> posList = target.position.getPath(destination);
+
         for (Position pos : posList) {
             Piece candidate = this.board[pos.getRow()][pos.getCol()];
             if (candidate != null && !candidate.position.equals(destination)) {
@@ -267,52 +256,99 @@ public class Game {
         return true;
     }
 
-    private boolean makeMove(String uci) {
-        char colChar = uci.charAt(0);
-        char rowChar = uci.charAt(1);
-        char newColChar = uci.charAt(2);
-        char newRowChar = uci.charAt(3);
-        int colInt = colChar - 'a';
-        int rowInt = rowChar - '1';
-        int newColInt = newColChar - 'a';
-        int newRowInt = newRowChar - '1';
-        Piece pieceToMove = board[rowInt][colInt];
-        Position destination = new Position(newRowInt, newColInt);
+    private Piece pawnPromote(boolean isWhite) {
+        System.out.print("To which piece you want to promote your pawn: ");
+        Scanner scan = new Scanner(System.in);
+        String ans =scan.next();
+        if (ans.equals("Queen")) {
+            System.out.println("Your paw was promoted to " + ans);
+            return new Queen(isWhite);
+        }
+        if (ans.equals("Rook")) {
+            System.out.println("Your paw was promoted to " + ans);
+            return new Rook(isWhite);
+        }
+        if (ans.equals("Bishop")) {
+            System.out.println("Your paw was promoted to " + ans);
+            return new Bishop(isWhite);
+        }
+        if (ans.equals("Knight")) {
+            System.out.println("Your paw was promoted to " + ans);
+            return new Knight(isWhite);
+        }
+        System.out.println("Invalid piece!");
+        return null;
+    }
 
-        if (pieceToMove == null || (handCount % 2 == 0 && !pieceToMove.isWhite) || (handCount % 2 != 0 && pieceToMove.isWhite)) {
-            System.out.println("Invalid square!");
+    private boolean makeMove (String uci){
+        Position target = this.uci.resolve(uci.substring(0, 2));
+        Position destination = this.uci.resolve(uci.substring(2, 4));
+
+        int rowInt = target.getRow();
+        int colInt = target.getCol();
+        int newRowInt = destination.getRow();
+        int newColInt = destination.getCol();
+
+        try {
+            Piece pieceToMove = board[rowInt][colInt];
+
+            if (pieceToMove == null || (handCount % 2 == 0 && !pieceToMove.isWhite) || (handCount % 2 != 0 && pieceToMove.isWhite)) {
+                System.out.println("Invalid square!");
+                return false;
+            }
+
+            if (!pieceToMove.isWhite && rowInt == 6 && board[newRowInt][newColInt] == null && colInt == newColInt) {
+                Piece promotedPawn = pawnPromote(false);
+                board[newRowInt][newColInt] = promotedPawn;
+                board[newRowInt][newColInt].setPosition(destination);
+                board[rowInt][colInt] = null;
+                renderBoard();
+                return true;
+            }
+
+            if (pieceToMove.isWhite && rowInt == 1 && board[newRowInt][newColInt] == null && colInt == newColInt) {
+                Piece promotedPawn = pawnPromote(true);
+                board[newRowInt][newColInt] = promotedPawn;
+                board[newRowInt][newColInt].setPosition(destination);
+                board[rowInt][colInt] = null;
+                renderBoard();
+                return true;
+            }
+
+            if (pieceToMove.getValue() == 1 && pawnKilling(rowInt, colInt).contains(uci.substring(2, 3))) {
+                board[newRowInt][newColInt] = pieceToMove;
+                board[newRowInt][newColInt].setPosition(destination);
+                board[rowInt][colInt] = null;
+                System.out.println("OK");
+                renderBoard();
+                return true;
+            }
+
+            if (pieceToMove.getValue() == 1 && ((board[rowInt + 1][colInt] != null && !pieceToMove.isWhite) ||
+                    (board[rowInt - 1][colInt] != null && pieceToMove.isWhite))) {
+                System.out.println("Invalid move!");
+                return false;
+            }
+
+            if (isValidMove(pieceToMove, destination)) {
+                board[newRowInt][newColInt] = pieceToMove;
+                board[newRowInt][newColInt].setPosition(destination);
+                board[rowInt][colInt] = null;
+                System.out.println("OK");
+                renderBoard();
+                return true;
+            }
+
+        } catch (Exception e) {
+            System.out.println("Invalid input, please try again");
             return false;
         }
-
-        if (pieceToMove.getValue() == 1 && pawnKilling(rowInt, colInt).contains(uci.substring(2, 3))) {
-            board[newRowInt][newColInt] = pieceToMove;
-            board[newRowInt][newColInt].setPosition(destination);
-            board[rowInt][colInt] = null;
-            System.out.println("OK");
-            renderBoard();
-            return true;
-        }
-
-        if (pieceToMove.getValue() == 1 && ((board[rowInt + 1][colInt] != null && !pieceToMove.isWhite) ||
-                (board[rowInt - 1][colInt] != null && pieceToMove.isWhite))) {
-            System.out.println("Invalid move!");
-            return false;
-        }
-
-        if (isValidMove(pieceToMove, destination)) {
-            board[newRowInt][newColInt] = pieceToMove;
-            board[newRowInt][newColInt].setPosition(destination);
-            board[rowInt][colInt] = null;
-            System.out.println("OK");
-            renderBoard();
-            return true;
-        }
-
+        System.out.println("Invalid input, please try again");
         return false;
     }
 
-    private void moves() {
-        if (isWhiteTurn()) {
+    private void moves () {
+        if (handCount % 2 == 0) {
             for (int i = 0; i < board.length; i++) {
                 for (int j = 0; j < board[i].length; j++) {
                     if (board[i][j] != null && board[i][j].isWhite) {
@@ -324,7 +360,8 @@ public class Game {
                     }
                 }
             }
-        } else {
+        }
+        if (handCount % 2 == 1) {
             for (int i = 0; i < board.length; i++) {
                 for (int j = 0; j < board[i].length; j++) {
                     if (board[i][j] != null && !board[i][j].isWhite) {
