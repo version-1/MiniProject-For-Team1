@@ -71,7 +71,7 @@ public class Game {
                 + "| * type 'resign' to resign                                                |\n"
                 + "| * type 'moves' to list all possible moves                                |\n"
                 + "| * type a square (e.g. b1, e2) to list all possible moves for that square |\n"
-                + "| * type UIC (e.g. bic3, e7e8q) to make a move                             |\n"
+                + "| * type UIC (e.g. b1c3, e7e8q) to make a move                             |\n"
                 + "+==========================================================================+");
     }
 
