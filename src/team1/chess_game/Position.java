@@ -24,7 +24,7 @@ public class Position {
     public String toString() {
         int colInt = col + 'a';
         char colLetter = (char) colInt;
-        return "(" + colLetter + (8 - row) + ')';
+        return "(" + colLetter + (row + 1) + ')';
     }
 
     @Override
