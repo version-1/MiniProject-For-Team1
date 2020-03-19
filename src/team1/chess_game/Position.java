@@ -23,10 +23,8 @@ public class Position {
     @Override
     public String toString() {
         int colInt = col + 'a';
-        char colLetter = (char)colInt;
-        return "(" + colLetter +
-                (row + 1) +
-                ')';
+        char colLetter = (char) colInt;
+        return "(" + colLetter + (8 - row) + ')';
     }
 
     @Override
@@ -34,44 +32,50 @@ public class Position {
         if (o == null) {
             return false;
         }
-        Position pos = (Position)o;
+        Position pos = (Position) o;
         return getRow() == pos.getRow() && getCol() == pos.getCol();
     }
 
     public List<Position> getPath(Position position) {
-      List<Position> list = new ArrayList<Position>();
+        List<Position> list = new ArrayList<Position>();
 
-      int row = Math.abs(getRow() - position.getRow());
-      int col = Math.abs(getCol() - position.getCol());
-      if (getCol() == position.getCol()) {
-          for (int i = 1; i <= row; i++) {
-              int delta = getRow() > position.getRow() ? -i : i;
-              int newRow = getRow() + delta;
-              list.add(new Position(newRow, getCol()));
-          }
-          return list;
-      }
+        int row = Math.abs(getRow() - position.getRow());
+        int col = Math.abs(getCol() - position.getCol());
 
-      if (getRow() == position.getRow()) {
-          for (int i = 1; i <= col; i++) {
-              int delta = getCol() > position.getCol() ? -i : i;
-              int newCol = getCol() + delta;
-              list.add(new Position(getRow(), newCol));
-          }
-          return list;
-      }
+        if (row == 0 && col == 0) {
+            return list;
+        }
 
-      int rowIndex = getRow();
-      int colIndex = getCol();
-      while(rowIndex == position.getRow() && colIndex == position.getCol()) {
-          rowIndex = getRow() > position.getRow() ? rowIndex + 1 : rowIndex - 1;
-          colIndex = getCol() > position.getCol() ? colIndex + 1 : colIndex - 1;
+        if (getCol() == position.getCol()) {
+            for (int i = 1; i <= row; i++) {
+                int delta = getRow() > position.getRow() ? -i : i;
+                int newRow = getRow() + delta;
+                list.add(new Position(newRow, getCol()));
+            }
+            return list;
+        }
 
-          if (rowIndex > 7 || rowIndex < 0) {
-              break;
-          }
-      }
+        if (getRow() == position.getRow()) {
+            for (int i = 1; i <= col; i++) {
+                int delta = getCol() > position.getCol() ? -i : i;
+                int newCol = getCol() + delta;
+                list.add(new Position(getRow(), newCol));
+            }
+            return list;
+        }
 
-      return list;
+        if (row != col) {
+            return list;
+        }
+
+        int rowIndex = getRow();
+        int colIndex = getCol();
+        for (int i = 0; i < row; i++) {
+            rowIndex = getRow() < position.getRow() ? rowIndex + 1 : rowIndex - 1;
+            colIndex = getCol() < position.getCol() ? colIndex + 1 : colIndex - 1;
+            list.add(new Position(rowIndex, colIndex));
+        }
+
+        return list;
     }
 }
