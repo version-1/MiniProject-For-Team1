@@ -87,7 +87,7 @@ public class Game {
             Piece[] row = this.board[i];
             for (int j = 0; j < row.length; j++) {
                 if (row[j] == null) {
-                    System.out.print("・");
+                    System.out.print(" ·");
                 } else {
                     System.out.print(" " + row[j].render());
                 }
