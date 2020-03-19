@@ -38,11 +38,12 @@ public class King extends Piece {
     @Override
     public boolean isValidMove(Position newPosition) {
         Game game = new Game();
-
-        List<Position> blackInvasion = game.blackInvader();
+        List<Position> whiteInvasion = game.blackInvader();
+        List<Position> blackInvasion = game.whiteInvader();
+        /**List<Position> blackInvasion = game.blackInvader();
         List<Position> whiteInvasion = game.whiteInvader();
 
-        /**Position north = new Position(this.position.getRow() + 1, this.position.getCol());
+        Position north = new Position(this.position.getRow() + 1, this.position.getCol());
         Position northEast = new Position(this.position.getRow() + 1, this.position.getCol() + 1);
         Position northWest = new Position(this.position.getRow() + 1, this.position.getCol() - 1);
         Position east = new Position(this.position.getRow(), this.position.getCol() + 1);

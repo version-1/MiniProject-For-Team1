@@ -339,9 +339,10 @@ public class Game {
         }
 
     }
+    List<Position> whiteInCheck = new ArrayList<>();
+    List<Position> blackInCheck = new ArrayList<>();
     private void add() {
-        List<Position> whiteInCheck = new ArrayList<>();
-        List<Position> blackInCheck = new ArrayList<>();
+
 
         if (handCount % 2 == 0) {
             for (int i = 0; i < board.length; i++) {
@@ -382,13 +383,12 @@ public class Game {
         }
 
     }
-
-    public List<Position> blackInvader () {
-        return blackInCheck;
+    public List<Position>blackInvader(){
+        return whiteInCheck;
     }
 
-        public List<Position> whiteInvader(){
-            return BlackInCheck;
+    public List<Position> whiteInvader(){
+            return blackInCheck;
 
         }
 
