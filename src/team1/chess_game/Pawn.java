@@ -52,10 +52,6 @@ public class Pawn extends Piece {
 
     @Override
     public boolean isValidMove(Position newPosition) {
-        // Don't count with opponent's figure on the newPosition or in front of a pawn
-        // The pawn reached the end and got promoted
-        //    this.promote(newPiece);
-        // starting position!
         if (!super.isValidMove(position)) {
             return false;
         }
@@ -72,7 +68,6 @@ public class Pawn extends Piece {
                 (this.position.getRow() - 1) == newPosition.getRow() && this.isWhite)) {
 
             return true;
-
         }
 
         return false;
