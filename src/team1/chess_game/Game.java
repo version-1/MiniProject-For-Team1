@@ -162,6 +162,7 @@ public class Game {
             if (target.getValue() == 1) {
                 moves += pawnKilling(rowInt, colInt);
             }
+
             if (target.getValue() == 1 && board[rowInt + 1][colInt] != null && !target.isWhite) {
                 if (moves.length() > 2) {
                     String movesFilled = moves.substring(0, moves.length() - 2);
@@ -250,6 +251,30 @@ public class Game {
         return true;
     }
 
+    private Piece pawnPromote(boolean isWhite) {
+        System.out.print("To which piece you want to promote your pawn: ");
+        Scanner scan = new Scanner(System.in);
+        String ans =scan.next();
+        if (ans.equals("Queen")) {
+            System.out.println("Your paw was promoted to " + ans);
+            return new Queen(isWhite);
+        }
+        if (ans.equals("Rook")) {
+            System.out.println("Your paw was promoted to " + ans);
+            return new Rook(isWhite);
+        }
+        if (ans.equals("Bishop")) {
+            System.out.println("Your paw was promoted to " + ans);
+            return new Bishop(isWhite);
+        }
+        if (ans.equals("Knight")) {
+            System.out.println("Your paw was promoted to " + ans);
+            return new Knight(isWhite);
+        }
+        System.out.println("Invalid piece!");
+        return null;
+    }
+
     private boolean makeMove (String uci){
         char colChar = uci.charAt(0);
         char rowChar = uci.charAt(1);
@@ -267,6 +292,24 @@ public class Game {
             if (pieceToMove == null || (handCount % 2 == 0 && !pieceToMove.isWhite) || (handCount % 2 != 0 && pieceToMove.isWhite)) {
                 System.out.println("Invalid square!");
                 return false;
+            }
+
+            if (!pieceToMove.isWhite && rowInt == 6 && board[newRowInt][newColInt] == null && colInt == newColInt) {
+                Piece promotedPawn = pawnPromote(false);
+                board[newRowInt][newColInt] = promotedPawn;
+                board[newRowInt][newColInt].setPosition(destination);
+                board[rowInt][colInt] = null;
+                renderBoard();
+                return true;
+            }
+
+            if (pieceToMove.isWhite && rowInt == 1 && board[newRowInt][newColInt] == null && colInt == newColInt) {
+                Piece promotedPawn = pawnPromote(true);
+                board[newRowInt][newColInt] = promotedPawn;
+                board[newRowInt][newColInt].setPosition(destination);
+                board[rowInt][colInt] = null;
+                renderBoard();
+                return true;
             }
 
             if (pieceToMove.getValue() == 1 && pawnKilling(rowInt, colInt).contains(uci.substring(2, 3))) {

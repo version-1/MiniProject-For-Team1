@@ -27,7 +27,6 @@ public class Pawn extends Piece {
         }
     }
 
-
     @Override
     public void move() {
         System.out.println("Forward 1");
@@ -55,6 +54,7 @@ public class Pawn extends Piece {
         if (!super.isValidMove(position)) {
             return false;
         }
+
         if ((this.position.getRow() == 1 && this.position.getCol() == newPosition.getCol() &&
                 (this.position.getRow() + 2) == newPosition.getRow()) && !this.isWhite
                 || (this.position.getCol() == newPosition.getCol() &&
