@@ -17,7 +17,7 @@ public class King extends Piece {
     @Override
     public String render() {
 
-        return isWhite ? "♔" : "♚";
+        return isWhite ?  "♕" : "♛";
 
 
     }

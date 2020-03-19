@@ -30,8 +30,8 @@ public class Game {
 
             if (Objects.equals(ans, "help") || Objects.equals(ans, "board") || Objects.equals(ans, "resign")
                     || Objects.equals(ans, "moves")) {
-                switch (ans) {
 
+                switch (ans) {
                     case "help":
                         help();
                         break;
@@ -255,18 +255,16 @@ public class Game {
     }
 
     private boolean makeMove (String uci){
-        char colChar = uci.charAt(0);
-        char rowChar = uci.charAt(1);
-        char newColChar = uci.charAt(2);
-        char newRowChar = uci.charAt(3);
-        int colInt = colChar - 'a';
-        int rowInt = rowChar - '1';
-        int newColInt = newColChar - 'a';
-        int newRowInt = newRowChar - '1';
+        Position target = this.uci.resolve(uci.substring(0, 2));
+        Position destination = this.uci.resolve(uci.substring(2, 4));
+
+        int rowInt = target.getRow();
+        int colInt = target.getCol();
+        int newRowInt = destination.getRow();
+        int newColInt = destination.getCol();
 
         try {
             Piece pieceToMove = board[rowInt][colInt];
-            Position destination = new Position(newRowInt, newColInt);
 
             if (pieceToMove == null || (handCount % 2 == 0 && !pieceToMove.isWhite) || (handCount % 2 != 0 && pieceToMove.isWhite)) {
                 System.out.println("Invalid square!");
