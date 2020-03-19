@@ -1,5 +1,6 @@
 package team1.chess_game;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.List;
 import java.util.Objects;
@@ -7,10 +8,13 @@ import java.io.*;
 
 public class Game {
     private Piece[][] board;
-    private int handCount = 0;
+    public int handCount = 0;
+    private Uci uci;
+
 
     public Game() {
         this.board = new Piece[8][8];
+        uci = new Uci(this.board.length);
         this.init();
     }
 
@@ -23,12 +27,11 @@ public class Game {
 
         while (true) {
             String ans = askUCI(scan);
-            System.out.println(handCount);
 
             if (Objects.equals(ans, "help") || Objects.equals(ans, "board") || Objects.equals(ans, "resign")
                     || Objects.equals(ans, "moves")) {
-                switch (ans) {
 
+                switch (ans) {
                     case "help":
                         help();
                         break;
@@ -50,15 +53,12 @@ public class Game {
                         moves();
                         break;
                 }
-            } else if (ans.length() == 4 && ans.charAt(0) >= 'a' && ans.charAt(0) <= 'h' && ans.charAt(1) >= '1' && ans.charAt(1) <= '8' &&
-                    ans.charAt(2) >= 'a' && ans.charAt(2) <= 'h' && ans.charAt(3) >= '1' && ans.charAt(3) <= '8') {
+            } else if (ans.length() == 4 && uci.validate(ans.substring(0, 2)) && uci.validate(ans.substring(2, 4))) {
                 if (makeMove(ans)) {
                     incrementHandCount();
                 }
-
-            } else if (ans.length() == 2 && ans.charAt(0) >= 'a' && ans.charAt(0) <= 'h' && ans.charAt(1) >= '1' && ans.charAt(1) <= '8') {
+            } else if (ans.length() == 2 && uci.validate(ans)) {
                 System.out.println(square(ans));
-
             } else {
                 System.out.println("\nInvalid Input.");
             }
@@ -71,7 +71,7 @@ public class Game {
                 + "| * type 'resign' to resign                                                |\n"
                 + "| * type 'moves' to list all possible moves                                |\n"
                 + "| * type a square (e.g. b1, e2) to list all possible moves for that square |\n"
-                + "| * type UIC (e.g. bic3, e7e8q) to make a move                             |\n"
+                + "| * type UIC (e.g. b1c3, e7e8q) to make a move                             |\n"
                 + "+==========================================================================+");
     }
 
@@ -149,10 +149,14 @@ public class Game {
 
     private String square(String square) {
         String moves = "{";
-        char colChar = square.charAt(0);
-        char rowChar = square.charAt(1);
-        int colInt = colChar - 'a';
-        int rowInt = rowChar - '1';
+
+        Position uci = this.uci.resolve(square);
+        if (uci == null) {
+            return null;
+        }
+        int colInt = uci.getCol();
+        int rowInt = uci.getRow();
+
         try {
             if (board[rowInt][colInt] == null) {
                 return "Invalid square!";
@@ -228,8 +232,8 @@ public class Game {
 
     private boolean isValidMove(Piece target, Position destination) {
         Piece piece = this.board[destination.getRow()][destination.getCol()];
-        Boolean isFriend = piece != null && piece.isWhite == target.isWhite;
-        Boolean isValid = !isFriend && target.isValidMove(destination);
+        boolean isFriend = piece != null && piece.isWhite == target.isWhite;
+        boolean isValid = !isFriend && target.isValidMove(destination);
 
         if (!isValid) {
             return false;
@@ -251,18 +255,16 @@ public class Game {
     }
 
     private boolean makeMove (String uci){
-        char colChar = uci.charAt(0);
-        char rowChar = uci.charAt(1);
-        char newColChar = uci.charAt(2);
-        char newRowChar = uci.charAt(3);
-        int colInt = colChar - 'a';
-        int rowInt = rowChar - '1';
-        int newColInt = newColChar - 'a';
-        int newRowInt = newRowChar - '1';
+        Position target = this.uci.resolve(uci.substring(0, 2));
+        Position destination = this.uci.resolve(uci.substring(2, 4));
+
+        int rowInt = target.getRow();
+        int colInt = target.getCol();
+        int newRowInt = destination.getRow();
+        int newColInt = destination.getCol();
 
         try {
             Piece pieceToMove = board[rowInt][colInt];
-            Position destination = new Position(newRowInt, newColInt);
 
             if (pieceToMove == null || (handCount % 2 == 0 && !pieceToMove.isWhite) || (handCount % 2 != 0 && pieceToMove.isWhite)) {
                 System.out.println("Invalid square!");
@@ -328,6 +330,64 @@ public class Game {
                 }
             }
         }
+
+    }
+    List<Position> whiteInCheck = new ArrayList<>();
+    List<Position> blackInCheck = new ArrayList<>();
+    private void add() {
+
+
+        if (handCount % 2 == 0) {
+            for (int i = 0; i < board.length; i++) {
+                for (int j = 0; j < board[i].length; j++) {
+                    if (board[i][j] != null && !board[i][j].isWhite) {
+                        Piece target0 = board[i][j];
+                        for (int k = 0; k < board.length; k++) {
+                            for (int l = 0; l < board[0].length; l++) {
+                                Position potential0 = new Position(k, l);
+                                if (isValidMove(target0, potential0)) {
+                                    whiteInCheck.add(potential0);
+
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (handCount % 2 != 0) {
+            for (int i = 0; i < board.length; i++) {
+                for (int j = 0; j < board[i].length; j++) {
+                    if (board[i][j] != null && board[i][j].isWhite) {
+                        Piece target1 = board[i][j];
+                        for (int k = 0; k < board.length; k++) {
+                            for (int l = 0; l < board[0].length; l++) {
+                                Position potential1 = new Position(k, l);
+                                if (isValidMove(target1, potential1)) {
+                                    blackInCheck.add(potential1);
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+    public List<Position>blackInvader(){
+        return whiteInCheck;
     }
 
+    public List<Position> whiteInvader(){
+            return blackInCheck;
+
+        }
+
+
+
+
 }
+
+

@@ -29,7 +29,7 @@ public class Uci {
         char colChar = uci.charAt(0);
         char rowChar = uci.charAt(1);
         int col = colChar - 'a';
-        int row = (size - 1 ) - (rowChar - '1');
+        int row = (rowChar - '1');
         return new Position(row, col);
     }
 }
