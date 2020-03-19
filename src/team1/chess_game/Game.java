@@ -93,7 +93,7 @@ public class Game {
                     System.out.print(" " + row[j].render());
                 }
             }
-            System.out.println("  " + Integer.toString(i + 1));
+            System.out.println("  " + Integer.toString(board.length - i));
         }
         renderFooter();
     }
