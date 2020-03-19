@@ -339,8 +339,11 @@ public class Game {
         }
 
     }
-    List<Position> whiteInCheck = new ArrayList<>();
-    List<Position> blackInCheck = new ArrayList<>();
+    private List<Integer> whiteInCheck = new ArrayList<>();
+    private List<Integer> blackInCheck = new ArrayList<>();
+    //private List<Position> whiteInCheck = new ArrayList<>();
+    //private List<Position> blackInCheck = new ArrayList<>();
+
     private void add() {
 
 
@@ -353,7 +356,8 @@ public class Game {
                             for (int l = 0; l < board[0].length; l++) {
                                 Position potential0 = new Position(k, l);
                                 if (isValidMove(target0, potential0)) {
-                                    whiteInCheck.add(potential0);
+                                    whiteInCheck.add(k + l);
+
 
                                 }
 
@@ -372,7 +376,7 @@ public class Game {
                             for (int l = 0; l < board[0].length; l++) {
                                 Position potential1 = new Position(k, l);
                                 if (isValidMove(target1, potential1)) {
-                                    blackInCheck.add(potential1);
+                                   blackInCheck.add(k + l);
 
                                 }
                             }
@@ -383,11 +387,12 @@ public class Game {
         }
 
     }
-    public List<Position>blackInvader(){
+    public List<Integer>blackInvader(){
         return whiteInCheck;
     }
 
-    public List<Position> whiteInvader(){
+
+    public List<Integer> whiteInvader(){
             return blackInCheck;
 
         }
