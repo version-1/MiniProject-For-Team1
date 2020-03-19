@@ -1,5 +1,6 @@
 package team1.chess_game;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.List;
 import java.util.Objects;
@@ -7,7 +8,9 @@ import java.io.*;
 
 public class Game {
     private Piece[][] board;
-    private int handCount = 0;
+    public int handCount = 0;
+    private Uci uci;
+
 
     public Game() {
         this.board = new Piece[8][8];
@@ -50,15 +53,12 @@ public class Game {
                         moves();
                         break;
                 }
-            } else if (ans.length() == 4 && ans.charAt(0) >= 'a' && ans.charAt(0) <= 'h' && ans.charAt(1) >= '1' && ans.charAt(1) <= '8' &&
-                    ans.charAt(2) >= 'a' && ans.charAt(2) <= 'h' && ans.charAt(3) >= '1' && ans.charAt(3) <= '8') {
+            } else if (ans.length() == 4 && uci.validate(ans.substring(0, 2)) && uci.validate(ans.substring(2, 4))) {
                 if (makeMove(ans)) {
                     incrementHandCount();
                 }
-
-            } else if (ans.length() == 2 && ans.charAt(0) >= 'a' && ans.charAt(0) <= 'h' && ans.charAt(1) >= '1' && ans.charAt(1) <= '8') {
+            } else if (ans.length() == 2 && uci.validate(ans)) {
                 System.out.println(square(ans));
-
             } else {
                 System.out.println("\nInvalid Input.");
             }
@@ -228,8 +228,8 @@ public class Game {
 
     private boolean isValidMove(Piece target, Position destination) {
         Piece piece = this.board[destination.getRow()][destination.getCol()];
-        Boolean isFriend = piece != null && piece.isWhite == target.isWhite;
-        Boolean isValid = !isFriend && target.isValidMove(destination);
+        boolean isFriend = piece != null && piece.isWhite == target.isWhite;
+        boolean isValid = !isFriend && target.isValidMove(destination);
 
         if (!isValid) {
             return false;
@@ -328,6 +328,64 @@ public class Game {
                 }
             }
         }
+
+    }
+    List<Position> whiteInCheck = new ArrayList<>();
+    List<Position> blackInCheck = new ArrayList<>();
+    private void add() {
+
+
+        if (handCount % 2 == 0) {
+            for (int i = 0; i < board.length; i++) {
+                for (int j = 0; j < board[i].length; j++) {
+                    if (board[i][j] != null && !board[i][j].isWhite) {
+                        Piece target0 = board[i][j];
+                        for (int k = 0; k < board.length; k++) {
+                            for (int l = 0; l < board[0].length; l++) {
+                                Position potential0 = new Position(k, l);
+                                if (isValidMove(target0, potential0)) {
+                                    whiteInCheck.add(potential0);
+
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (handCount % 2 != 0) {
+            for (int i = 0; i < board.length; i++) {
+                for (int j = 0; j < board[i].length; j++) {
+                    if (board[i][j] != null && board[i][j].isWhite) {
+                        Piece target1 = board[i][j];
+                        for (int k = 0; k < board.length; k++) {
+                            for (int l = 0; l < board[0].length; l++) {
+                                Position potential1 = new Position(k, l);
+                                if (isValidMove(target1, potential1)) {
+                                    blackInCheck.add(potential1);
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+    public List<Position>blackInvader(){
+        return whiteInCheck;
     }
 
+    public List<Position> whiteInvader(){
+            return blackInCheck;
+
+        }
+
+
+
+
 }
+
+
