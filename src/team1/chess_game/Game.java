@@ -92,7 +92,7 @@ public class Game {
                     System.out.print(" " + row[j].render());
                 }
             }
-            System.out.println("  " + Integer.toString(board.length - i));
+            System.out.println("  " + Integer.toString(i + 1));
         }
         renderFooter();
     }
@@ -123,8 +123,8 @@ public class Game {
                 this.board[i][0] = new Rook(isWhite);
                 this.board[i][1] = new Knight(isWhite);
                 this.board[i][2] = new Bishop(isWhite);
-                this.board[i][3] = new King(isWhite);
-                this.board[i][4] = new Queen(isWhite);
+                this.board[i][3] = new Queen(isWhite);
+                this.board[i][4] = new King(isWhite);
                 this.board[i][5] = new Bishop(isWhite);
                 this.board[i][6] = new Knight(isWhite);
                 this.board[i][7] = new Rook(isWhite);
