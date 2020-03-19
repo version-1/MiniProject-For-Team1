@@ -14,6 +14,7 @@ public class Game {
 
     public Game() {
         this.board = new Piece[8][8];
+        uci = new Uci(this.board.length);
         this.init();
     }
 
@@ -26,7 +27,6 @@ public class Game {
 
         while (true) {
             String ans = askUCI(scan);
-            System.out.println(handCount);
 
             if (Objects.equals(ans, "help") || Objects.equals(ans, "board") || Objects.equals(ans, "resign")
                     || Objects.equals(ans, "moves")) {
@@ -149,10 +149,14 @@ public class Game {
 
     private String square(String square) {
         String moves = "{";
-        char colChar = square.charAt(0);
-        char rowChar = square.charAt(1);
-        int colInt = colChar - 'a';
-        int rowInt = rowChar - '1';
+
+        Position uci = this.uci.resolve(square);
+        if (uci == null) {
+            return null;
+        }
+        int colInt = uci.getCol();
+        int rowInt = uci.getRow();
+
         try {
             if (board[rowInt][colInt] == null) {
                 return "Invalid square!";
