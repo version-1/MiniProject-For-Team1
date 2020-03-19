@@ -52,8 +52,9 @@ public class Game {
                 }
             } else if (ans.length() == 4 && ans.charAt(0) >= 'a' && ans.charAt(0) <= 'h' && ans.charAt(1) >= '1' && ans.charAt(1) <= '8' &&
                     ans.charAt(2) >= 'a' && ans.charAt(2) <= 'h' && ans.charAt(3) >= '1' && ans.charAt(3) <= '8') {
-                    if(makeMove(ans)){
-                    incrementHandCount();}
+                    if (makeMove(ans)) {
+                    incrementHandCount();
+                    }
 
             } else if (ans.length() == 2 && ans.charAt(0) >= 'a' && ans.charAt(0) <= 'h' && ans.charAt(1) >= '1' && ans.charAt(1) <= '8') {
                 System.out.println(square(ans));
@@ -157,6 +158,27 @@ public class Game {
                 return "Invalid square!";
             }
             Piece target = board[rowInt][colInt];
+
+            if (target.getValue() == 1) {
+                moves += pawnKilling(rowInt, colInt);
+            }
+            if (target.getValue() == 1 && board[rowInt + 1][colInt] != null && !target.isWhite) {
+                if (moves.length() > 2) {
+                    String movesFilled = moves.substring(0, moves.length() - 2);
+                    return movesFilled + "}";
+                } else {
+                    return moves + "}";
+                }
+            }
+            if (target.getValue() == 1 && board[rowInt - 1][colInt] != null && target.isWhite) {
+                if (moves.length() > 2) {
+                    String movesFilled = moves.substring(0, moves.length() - 2);
+                    return movesFilled + "}";
+                } else {
+                    return moves + "}";
+                }
+            }
+
             for (int j = 0; j < board.length; j++) {
                 for (int i = 0; i < board[0].length; i++) {
                     Position potential = new Position(i, j);
@@ -175,6 +197,33 @@ public class Game {
         }
 
         return moves + "}";
+    }
+
+    private String pawnKilling(int rowInt, int colInt) {
+        Piece target = board[rowInt][colInt];
+        String moves = "";
+        if (!target.isWhite) {
+            Position potential = new Position(rowInt + 1, colInt + 1);
+            Position potential2 = new Position(rowInt + 1, colInt - 1);
+            if (colInt != 7 && board[rowInt + 1][colInt + 1] != null && board[rowInt + 1][colInt + 1].isWhite) {
+                moves += potential.toString() + ", ";
+            }
+            if (colInt != 0 && board[rowInt + 1][colInt - 1] != null && board[rowInt + 1][colInt - 1].isWhite) {
+                moves += potential2.toString() + ", ";
+            }
+        }
+        if (target.isWhite) {
+            Position potential = new Position(rowInt - 1, colInt + 1);
+            Position potential2 = new Position(rowInt - 1, colInt - 1);
+            if (colInt != 7 && board[rowInt - 1][colInt + 1] != null && !board[rowInt - 1][colInt + 1].isWhite) {
+                moves += potential.toString() + ", ";
+            }
+            if (colInt != 0 && board[rowInt - 1][colInt - 1] != null && !board[rowInt - 1][colInt - 1].isWhite) {
+
+                moves += potential2.toString() + ", ";
+            }
+        }
+        return moves;
     }
 
     private boolean isValidMove(Piece target, Position destination) {
@@ -212,12 +261,28 @@ public class Game {
             int rowInt = rowChar - '1';
             int newColInt = newColChar - 'a';
             int newRowInt = newRowChar - '1';
+
             try {
                 Piece pieceToMove = board[rowInt][colInt];
                 Position destination = new Position(newRowInt, newColInt);
 
                 if (pieceToMove == null || (handCount % 2 == 0 && !pieceToMove.isWhite) || (handCount % 2 != 0 && pieceToMove.isWhite)) {
                     System.out.println("Invalid square!");
+                    return false;
+                }
+
+                if (pieceToMove.getValue() == 1 && pawnKilling(rowInt, colInt).contains(uci.substring(2, 3))) {
+                    board[newRowInt][newColInt] = pieceToMove;
+                    board[newRowInt][newColInt].setPosition(destination);
+                    board[rowInt][colInt] = null;
+                    System.out.println("OK");
+                    renderBoard();
+                    return true;
+                }
+
+                if (pieceToMove.getValue() == 1 && ((board[rowInt + 1][colInt] != null && !pieceToMove.isWhite) ||
+                        (board[rowInt - 1][colInt] != null && pieceToMove.isWhite))) {
+                    System.out.println("Invalid move!");
                     return false;
                 }
 

@@ -72,7 +72,6 @@ public class Pawn extends Piece {
                 (this.position.getRow() - 1) == newPosition.getRow() && this.isWhite)) {
 
             return true;
-
         }
 
         return false;
