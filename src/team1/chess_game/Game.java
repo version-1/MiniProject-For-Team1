@@ -384,11 +384,11 @@ public class Game {
     }
 
     public List<Position> blackInvader () {
-        return null;
+        return blackInCheck;
     }
 
         public List<Position> whiteInvader(){
-            return null;
+            return BlackInCheck;
 
         }
 
