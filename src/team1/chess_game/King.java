@@ -4,21 +4,15 @@ import java.util.List;
 
 
 public class King extends Piece {
-
-
     public King(boolean isWhite) {
         super(1000, isWhite);
-
-
     }
 
     @Override
     public String render() {
-
         return isWhite ? "♔" : "♚";
-
-
     }
+
 
     public String toString() {
         return "King{value=’" + getValue() + "\'" + "}";
@@ -32,8 +26,8 @@ public class King extends Piece {
     @Override
     public boolean isValidMove(Position newPosition) {
         Game game = new Game();
-        List<Position> whiteInvasion = game.whiteInvader();
-        List<Position> blackInvasion = game.blackInvader();
+        // List<Position> whiteInvasion = game.whiteInvader();
+        // List<Position> blackInvasion = game.blackInvader();
 
 
         Position north = new Position(this.position.getRow() + 1, this.position.getCol());
@@ -48,7 +42,33 @@ public class King extends Piece {
         if (!super.isValidMove(position)) {
             return false;
         }
+        if (north.equals(newPosition)) {
+            return true;
+        }
+        if (northWest.equals(newPosition)) {
+            return true;
+        }
+        if (northEast.equals(newPosition)) {
+            return true;
+        }
+        if (southEast.equals(newPosition)) {
+            return true;
+        }
+        if (southWest.equals(newPosition)) {
+            return true;
+        }
+        if (south.equals(newPosition)) {
+            return true;
+        }
+        if (east.equals(newPosition)) {
+            return true;
+        }
+        if (west.equals(newPosition)) {
+            return true;
+        }
+        return false;
 
+        /*
         // White King is in check
         if (this.isWhite) {
             for (Position po : blackInvasion) {
@@ -69,7 +89,7 @@ public class King extends Piece {
 
              return true;
              }
-             }*/
+             }
         }
 
 
@@ -92,9 +112,10 @@ public class King extends Piece {
 
              return true;
              }
-             }*/
+             }
         }
-        return true;
+        */
+
     }
 }
 

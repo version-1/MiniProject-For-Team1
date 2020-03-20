@@ -55,6 +55,13 @@ public class Game {
             } else if (ans.length() == 4 && uci.validate(ans.substring(0, 2)) && uci.validate(ans.substring(2, 4))) {
                 if (makeMove(ans)) {
                     incrementHandCount();
+                    if (kingInCheck(true)) {
+                        System.out.println("White King is in check!");
+                    }
+                    if (kingInCheck(false)) {
+                        System.out.println("Black King is in check!");
+                    }
+
                 }
 
             } else if (ans.length() == 2 && uci.validate(ans)) {
@@ -176,6 +183,7 @@ public class Game {
                     return moves + "}";
                 }
             }
+
             if (target.getValue() == 1 && board[rowInt - 1][colInt] != null && target.isWhite) {
                 if (moves.length() > 2) {
                     String movesFilled = moves.substring(0, moves.length() - 2);
@@ -280,6 +288,28 @@ public class Game {
         return null;
     }
 
+    private boolean kingInCheck(boolean isWhite) {
+        for (int a = 0; a < board.length; a++) {
+            for (int b = 0; b < board[0].length; b++) {
+                Piece piece = board[b][a];
+                if (piece != null) {
+                for (int j = 0; j < board.length; j++) {
+                    for (int i = 0; i < board[0].length; i++) {
+                        Position potential = new Position(i, j);
+                        if (board[i][j] != null &&
+                                isValidMove(piece, potential) &&
+                                board[i][j].getValue() == 1000 &&
+                                board[i][j].isWhite != piece.isWhite && piece.isWhite != isWhite) {
+                            return true;
+                        }
+                    }
+                }
+                }
+            }
+        }
+        return false;
+    }
+
     private boolean makeMove (String uci){
         Position target = this.uci.resolve(uci.substring(0, 2));
         Position destination = this.uci.resolve(uci.substring(2, 4));
@@ -330,12 +360,32 @@ public class Game {
                 return false;
             }
 
+            if (pieceToMove.getValue() == 1000 && isValidMove(pieceToMove, destination)) {
+                board[newRowInt][newColInt] = pieceToMove;
+                board[newRowInt][newColInt].setPosition(destination);
+                if (kingInCheck(pieceToMove.isWhite)) {
+                    board[newRowInt][newColInt] = null;
+                    return false;
+                }
+                board[rowInt][colInt] = null;
+                renderBoard();
+                System.out.println("OK");
+                return true;
+            }
+
             if (isValidMove(pieceToMove, destination)) {
                 board[newRowInt][newColInt] = pieceToMove;
                 board[newRowInt][newColInt].setPosition(destination);
+                if (kingInCheck(pieceToMove.isWhite)) {
+                    board[newRowInt][newColInt] = null;
+                    return false;
+                }
+                if (kingInCheck(!pieceToMove.isWhite)) {
+                    System.out.println("Check!");
+                }
                 board[rowInt][colInt] = null;
-                System.out.println("OK");
                 renderBoard();
+                System.out.println("OK");
                 return true;
             }
 
@@ -374,16 +424,12 @@ public class Game {
                 }
             }
         }
-
     }
-    //private List<Integer> whiteInCheck = new ArrayList<>();
-    //private List<Integer> blackInCheck = new ArrayList<>();
+
     private List<Position> whiteInCheck = new ArrayList<>();
     private List<Position> blackInCheck = new ArrayList<>();
 
     private void add() {
-
-
         if (handCount % 2 == 0) {
             for (int i = 0; i < board.length; i++) {
                 for (int j = 0; j < board[i].length; j++) {
@@ -394,10 +440,7 @@ public class Game {
                                 Position potential0 = new Position(k, l);
                                 if (isValidMove(target0, potential0)) {
                                     whiteInCheck.add(potential0);
-
-
                                 }
-
                             }
                         }
                     }
@@ -414,7 +457,6 @@ public class Game {
                                 Position potential1 = new Position(k, l);
                                 if (isValidMove(target1, potential1)) {
                                    blackInCheck.add(potential1);
-
                                 }
                             }
                         }
@@ -422,21 +464,15 @@ public class Game {
                 }
             }
         }
-
     }
-    public List<Position>blackInvader(){
+
+    public List<Position>blackInvader() {
         return whiteInCheck;
     }
 
-
-    public List<Position> whiteInvader(){
+    public List<Position> whiteInvader() {
             return blackInCheck;
-
-        }
-
-
-
-
+    }
 }
 
 

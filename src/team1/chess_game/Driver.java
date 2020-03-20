@@ -8,11 +8,5 @@ public class Driver {
         Scanner scan = new Scanner(System.in);
         game.start(scan);
         scan.close();
-
-
-
-        ///test
-
-
     }
 }
