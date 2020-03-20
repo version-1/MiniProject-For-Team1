@@ -293,17 +293,17 @@ public class Game {
             for (int b = 0; b < board[0].length; b++) {
                 Piece piece = board[b][a];
                 if (piece != null) {
-                for (int j = 0; j < board.length; j++) {
-                    for (int i = 0; i < board[0].length; i++) {
-                        Position potential = new Position(i, j);
-                        if (board[i][j] != null &&
-                                isValidMove(piece, potential) &&
-                                board[i][j].getValue() == 1000 &&
-                                board[i][j].isWhite != piece.isWhite && piece.isWhite != isWhite) {
-                            return true;
+                    for (int j = 0; j < board.length; j++) {
+                        for (int i = 0; i < board[0].length; i++) {
+                            Position potential = new Position(i, j);
+                            if (board[i][j] != null &&
+                                    isValidMove(piece, potential) &&
+                                    board[i][j].getValue() == 1000 &&
+                                    board[i][j].isWhite != piece.isWhite && piece.isWhite != isWhite) {
+                                return true;
+                            }
                         }
                     }
-                }
                 }
             }
         }
@@ -365,6 +365,7 @@ public class Game {
                 board[newRowInt][newColInt].setPosition(destination);
                 if (kingInCheck(pieceToMove.isWhite)) {
                     board[newRowInt][newColInt] = null;
+                    System.out.println("Check for black King!");
                     return false;
                 }
                 board[rowInt][colInt] = null;
@@ -378,6 +379,7 @@ public class Game {
                 board[newRowInt][newColInt].setPosition(destination);
                 if (kingInCheck(pieceToMove.isWhite)) {
                     board[newRowInt][newColInt] = null;
+                    System.out.println("Check for white King!");
                     return false;
                 }
                 if (kingInCheck(!pieceToMove.isWhite)) {
@@ -425,54 +427,4 @@ public class Game {
             }
         }
     }
-
-    private List<Position> whiteInCheck = new ArrayList<>();
-    private List<Position> blackInCheck = new ArrayList<>();
-
-    private void add() {
-        if (handCount % 2 == 0) {
-            for (int i = 0; i < board.length; i++) {
-                for (int j = 0; j < board[i].length; j++) {
-                    if (board[i][j] != null && !board[i][j].isWhite) {
-                        Piece target0 = board[i][j];
-                        for (int k = 0; k < board.length; k++) {
-                            for (int l = 0; l < board[0].length; l++) {
-                                Position potential0 = new Position(k, l);
-                                if (isValidMove(target0, potential0)) {
-                                    whiteInCheck.add(potential0);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        if (handCount % 2 != 0) {
-            for (int i = 0; i < board.length; i++) {
-                for (int j = 0; j < board[i].length; j++) {
-                    if (board[i][j] != null && board[i][j].isWhite) {
-                        Piece target1 = board[i][j];
-                        for (int k = 0; k < board.length; k++) {
-                            for (int l = 0; l < board[0].length; l++) {
-                                Position potential1 = new Position(k, l);
-                                if (isValidMove(target1, potential1)) {
-                                   blackInCheck.add(potential1);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    public List<Position>blackInvader() {
-        return whiteInCheck;
-    }
-
-    public List<Position> whiteInvader() {
-            return blackInCheck;
-    }
 }
-
-
